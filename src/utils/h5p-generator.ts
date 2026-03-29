@@ -1,12 +1,12 @@
-import { unzipSync, zipSync, strToU8 } from 'fflate';
-
 import type {
   Content,
-  TextContent,
-  MultipleChoiceContent,
-  FillInTheBlanks,
   Freetext,
+  TextContent,
+  FillInTheBlanks,
+  MultipleChoiceContent,
 } from 'src/sections/editor/types';
+
+import { zipSync, strToU8, unzipSync } from 'fflate';
 
 // ----------------------------------------------------------------------
 // UUID helper (available in all modern browsers)
@@ -157,6 +157,8 @@ function contentItemToH5P(item: Content) {
       return makeFillInTheBlanksItem(item);
     case 'freetext':
       return makeFreetextItem(item);
+    default:
+      throw new Error(`Unknown content type: ${(item as Content).type}`);
   }
 }
 
