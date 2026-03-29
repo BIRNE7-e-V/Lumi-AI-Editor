@@ -110,7 +110,7 @@ export function EditorHeader({
             size="small"
             variant={hasCustomSystemPrompt ? 'contained' : 'outlined'}
             onClick={onSystemPromptEdit}
-            startIcon={<Iconify icon="solar:document-text-bold" width={20} />}
+            startIcon={<Iconify icon="solar:file-text-bold" width={20} />}
           >
             Prompt
           </Button>
