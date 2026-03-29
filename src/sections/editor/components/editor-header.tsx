@@ -3,6 +3,7 @@ import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import Select from '@mui/material/Select';
+import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
 import InputLabel from '@mui/material/InputLabel';
@@ -21,11 +22,13 @@ type EditorHeaderProps = {
   provider: ProviderType;
   apiEndpoint: string;
   apiToken: string;
+  hasCustomSystemPrompt: boolean;
   downloadLoading: boolean;
   hasContent: boolean;
   onProviderChange: (provider: ProviderType) => void;
   onEndpointChange: (endpoint: string) => void;
   onTokenChange: (token: string) => void;
+  onSystemPromptEdit: () => void;
   onDownload: () => void;
 };
 
@@ -33,11 +36,13 @@ export function EditorHeader({
   provider,
   apiEndpoint,
   apiToken,
+  hasCustomSystemPrompt,
   downloadLoading,
   hasContent,
   onProviderChange,
   onEndpointChange,
   onTokenChange,
+  onSystemPromptEdit,
   onDownload,
 }: EditorHeaderProps) {
   return (
@@ -100,6 +105,16 @@ export function EditorHeader({
             icon={<Iconify icon="solar:check-circle-bold" width={16} />}
           />
         )}
+        <Tooltip title={hasCustomSystemPrompt ? 'Systemprompt (angepasst)' : 'Systemprompt bearbeiten'}>
+          <Button
+            size="small"
+            variant={hasCustomSystemPrompt ? 'contained' : 'outlined'}
+            onClick={onSystemPromptEdit}
+            startIcon={<Iconify icon="solar:document-text-bold" width={20} />}
+          >
+            Prompt
+          </Button>
+        </Tooltip>
       </Stack>
       <Button
         variant="contained"

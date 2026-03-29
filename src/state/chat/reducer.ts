@@ -10,6 +10,7 @@ import {
   CHAT_MESSAGE_ADDED,
   CHAT_H5P_GENERATING,
   CHAT_PREVIEW_UPDATED,
+  CHAT_SYSTEM_PROMPT_CHANGED,
 } from './action-types';
 
 import type { ChatMessage, PreviewDocument } from './types';
@@ -23,6 +24,7 @@ export interface IChatState {
   h5pError: string | null;
   preview: string;
   previewDoc: PreviewDocument | null;
+  customSystemPrompt: string | null;
 }
 
 export const initialState: IChatState = {
@@ -34,6 +36,7 @@ export const initialState: IChatState = {
   h5pError: null,
   preview: '',
   previewDoc: null,
+  customSystemPrompt: null,
 };
 
 export default function chatReducer(
@@ -64,6 +67,8 @@ export default function chatReducer(
       return { ...state, h5pGenerating: false, h5pError: action.payload };
     case CHAT_PREVIEW_UPDATED:
       return { ...state, preview: action.payload.markdown, previewDoc: action.payload.doc };
+    case CHAT_SYSTEM_PROMPT_CHANGED:
+      return { ...state, customSystemPrompt: action.payload };
     default:
       return state;
   }

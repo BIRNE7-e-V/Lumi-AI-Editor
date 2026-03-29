@@ -9,6 +9,7 @@ export const CHAT_H5P_GENERATING = 'CHAT_H5P_GENERATING';
 export const CHAT_H5P_GENERATED = 'CHAT_H5P_GENERATED';
 export const CHAT_H5P_ERROR = 'CHAT_H5P_ERROR';
 export const CHAT_PREVIEW_UPDATED = 'CHAT_PREVIEW_UPDATED';
+export const CHAT_SYSTEM_PROMPT_CHANGED = 'CHAT_SYSTEM_PROMPT_CHANGED';
 
 export interface ChatMessageAddedAction {
   type: typeof CHAT_MESSAGE_ADDED;
@@ -51,6 +52,11 @@ export interface ChatPreviewUpdatedAction {
   payload: { markdown: string; doc: PreviewDocument };
 }
 
+export interface ChatSystemPromptChangedAction {
+  type: typeof CHAT_SYSTEM_PROMPT_CHANGED;
+  payload: string | null;
+}
+
 export type ChatActionTypes =
   | ChatMessageAddedAction
   | ChatMessagesSetAction
@@ -60,4 +66,5 @@ export type ChatActionTypes =
   | ChatH5pGeneratingAction
   | ChatH5pGeneratedAction
   | ChatH5pErrorAction
-  | ChatPreviewUpdatedAction;
+  | ChatPreviewUpdatedAction
+  | ChatSystemPromptChangedAction;

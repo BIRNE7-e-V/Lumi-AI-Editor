@@ -6,11 +6,13 @@ import Snackbar from '@mui/material/Snackbar';
 
 import { sendMessage } from 'src/state/chat/thunks';
 import { useSelector, useDispatch } from 'src/state';
-import { selectChatLoading, selectChatMessages } from 'src/state/chat/selectors';
+import { buildSystemPrompt } from 'src/state/chat/prompts';
+import { CHAT_SYSTEM_PROMPT_CHANGED } from 'src/state/chat/action-types';
 import {
   generateText,
   generateQuestion,
 } from 'src/state/lumi-editor/lumiEditorThunks';
+import { selectChatLoading, selectChatMessages, selectCustomSystemPrompt } from 'src/state/chat/selectors';
 import {
   selectTitle,
   selectProvider,
@@ -41,6 +43,7 @@ import { EditorCanvas } from './components/editor-canvas';
 import { AIChatHandle } from './components/ai-chat-handle';
 import { AIChatDrawer } from './components/ai-chat-drawer';
 import { TurnIntoMenu } from './components/turn-into-menu';
+import { SystemPromptDialog } from './components/system-prompt-dialog';
 import { generateH5PPackage, downloadH5PPackage } from '../../utils/h5p-generator';
 
 import type { ContentType, CommandOption, GeneratingSkeleton } from './types';
@@ -58,6 +61,10 @@ function EditorPage() {
   const content = useSelector(selectOrderedContent);
   const hasContent = useSelector(selectHasContent);
   const chatMessages = useSelector(selectChatMessages);
+  const customSystemPrompt = useSelector(selectCustomSystemPrompt);
+
+  // Local UI state - System Prompt Dialog
+  const [systemPromptDialogOpen, setSystemPromptDialogOpen] = React.useState(false);
 
   // Local UI state - Chat
   const [chatDrawerOpen, setChatDrawerOpen] = React.useState(false);
@@ -282,11 +289,13 @@ function EditorPage() {
           provider={provider}
           apiEndpoint={apiEndpoint}
           apiToken={apiToken}
+          hasCustomSystemPrompt={customSystemPrompt !== null}
           downloadLoading={downloadLoading}
           hasContent={hasContent}
           onProviderChange={(newProvider) => dispatch(providerChanged(newProvider))}
           onEndpointChange={(endpoint) => dispatch(apiEndpointChanged(endpoint))}
           onTokenChange={(token) => dispatch(apiTokenChanged(token))}
+          onSystemPromptEdit={() => setSystemPromptDialogOpen(true)}
           onDownload={handleDownload}
         />
 
@@ -389,6 +398,15 @@ function EditorPage() {
         onAITransform={(contentType) => {
           if (menus.contentMenu.contentId) handleAITurnInto(menus.contentMenu.contentId, contentType);
         }}
+      />
+
+      {/* System Prompt Dialog */}
+      <SystemPromptDialog
+        open={systemPromptDialogOpen}
+        customPrompt={customSystemPrompt}
+        defaultPrompt={buildSystemPrompt(title, content)}
+        onClose={() => setSystemPromptDialogOpen(false)}
+        onSave={(prompt) => dispatch({ type: CHAT_SYSTEM_PROMPT_CHANGED, payload: prompt })}
       />
 
       {/* Snackbar */}

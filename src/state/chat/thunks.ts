@@ -9,6 +9,7 @@ import { selectTitle, selectApiToken, selectProvider, selectApiEndpoint, selectO
 
 import { chatMessageAdded } from './actions';
 import { buildSystemPrompt } from './prompts';
+import { selectCustomSystemPrompt } from './selectors';
 import { CHAT_API_PENDING, CHAT_API_SETTLED } from './action-types';
 
 // ----------------------------------------------------------------------
@@ -119,7 +120,8 @@ export const sendMessage =
       const title = selectTitle(state);
       const content = selectOrderedContent(state);
 
-      const systemPrompt = buildSystemPrompt(title, content);
+      const customSystemPrompt = selectCustomSystemPrompt(state);
+      const systemPrompt = customSystemPrompt ?? buildSystemPrompt(title, content);
       const currentStateJson = JSON.stringify({ title, content });
 
       // Inject the current editor state into the last user message (API only, not stored in state)
