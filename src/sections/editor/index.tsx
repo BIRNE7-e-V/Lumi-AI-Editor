@@ -7,12 +7,18 @@ import Snackbar from '@mui/material/Snackbar';
 import { sendMessage } from 'src/state/chat/thunks';
 import { useSelector, useDispatch } from 'src/state';
 import { buildSystemPrompt } from 'src/state/chat/prompts';
+import { chatReadAloudToggled } from 'src/state/chat/actions';
 import { CHAT_SYSTEM_PROMPT_CHANGED } from 'src/state/chat/action-types';
 import {
   generateText,
   generateQuestion,
 } from 'src/state/lumi-editor/lumiEditorThunks';
-import { selectChatLoading, selectChatMessages, selectCustomSystemPrompt } from 'src/state/chat/selectors';
+import {
+  selectChatLoading,
+  selectChatMessages,
+  selectCustomSystemPrompt,
+  selectReadAloudEnabled,
+} from 'src/state/chat/selectors';
 import {
   selectTitle,
   selectProvider,
@@ -33,6 +39,7 @@ import {
 } from 'src/state/lumi-editor';
 
 import { useMenus } from './hooks/use-menus';
+import { useSpeech } from './hooks/use-speech';
 import { metadata, drawerWidth } from './constants';
 import { useDragDrop } from './hooks/use-drag-drop';
 import { CommandMenu } from './components/command-menu';
@@ -62,6 +69,7 @@ function EditorPage() {
   const hasContent = useSelector(selectHasContent);
   const chatMessages = useSelector(selectChatMessages);
   const customSystemPrompt = useSelector(selectCustomSystemPrompt);
+  const readAloudEnabled = useSelector(selectReadAloudEnabled);
 
   // Local UI state - System Prompt Dialog
   const [systemPromptDialogOpen, setSystemPromptDialogOpen] = React.useState(false);
@@ -71,6 +79,25 @@ function EditorPage() {
   const [chatInput, setChatInput] = React.useState('');
   const chatLoading = useSelector(selectChatLoading);
   const chatMessagesEndRef = React.useRef<HTMLDivElement>(null);
+
+  // Speech (STT + TTS)
+  const speech = useSpeech({
+    onTranscript: (text) => setChatInput(text),
+  });
+
+  // Auto-read the latest assistant message when read-aloud is enabled
+  const lastMessageRef = React.useRef<string | null>(null);
+  React.useEffect(() => {
+    if (!readAloudEnabled) return;
+    const last = chatMessages[chatMessages.length - 1];
+    if (!last || last.role !== 'assistant') return;
+    if (last.id === lastMessageRef.current) return;
+    lastMessageRef.current = last.id;
+    // Strip suggestion markers before speaking
+    const text = last.content.replace(/\[VORSCHLÄGE:.*?\]/s, '').trim();
+    speech.speak(text, last.id);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [chatMessages, readAloudEnabled]);
 
   // Local UI state - Snackbar
   const [snackbar, setSnackbar] = React.useState<{
@@ -348,6 +375,12 @@ function EditorPage() {
         chatInput={chatInput}
         chatLoading={chatLoading}
         chatMessagesEndRef={chatMessagesEndRef}
+        readAloudEnabled={readAloudEnabled}
+        isListening={speech.isListening}
+        isSpeaking={speech.isSpeaking}
+        speakingMessageId={speech.speakingId}
+        sttSupported={speech.sttSupported}
+        ttsSupported={speech.ttsSupported}
         onClose={() => setChatDrawerOpen(false)}
         onChatInputChange={setChatInput}
         onSendMessage={handleSendChatMessage}
@@ -355,6 +388,16 @@ function EditorPage() {
         onSuggestionClick={(text) => {
           dispatch(sendMessage(text, 'user'));
         }}
+        onReadAloudToggle={() => dispatch(chatReadAloudToggled())}
+        onMicClick={() => {
+          if (speech.isListening) {
+            speech.stopListening();
+          } else {
+            speech.startListening();
+          }
+        }}
+        onSpeakMessage={speech.speak}
+        onStopSpeaking={speech.stopSpeaking}
       />
 
       {/* Command Menu */}

@@ -9,3 +9,4 @@ export const selectH5pError = (state: RootState) => state.chat.h5pError;
 export const selectChatPreview = (state: RootState) => state.chat.preview;
 export const selectChatPreviewDoc = (state: RootState) => state.chat.previewDoc;
 export const selectCustomSystemPrompt = (state: RootState) => state.chat.customSystemPrompt;
+export const selectReadAloudEnabled = (state: RootState) => state.chat.readAloudEnabled;

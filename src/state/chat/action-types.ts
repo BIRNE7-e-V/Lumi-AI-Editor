@@ -10,6 +10,7 @@ export const CHAT_H5P_GENERATED = 'CHAT_H5P_GENERATED';
 export const CHAT_H5P_ERROR = 'CHAT_H5P_ERROR';
 export const CHAT_PREVIEW_UPDATED = 'CHAT_PREVIEW_UPDATED';
 export const CHAT_SYSTEM_PROMPT_CHANGED = 'CHAT_SYSTEM_PROMPT_CHANGED';
+export const CHAT_READ_ALOUD_TOGGLED = 'CHAT_READ_ALOUD_TOGGLED';
 
 export interface ChatMessageAddedAction {
   type: typeof CHAT_MESSAGE_ADDED;
@@ -57,6 +58,10 @@ export interface ChatSystemPromptChangedAction {
   payload: string | null;
 }
 
+export interface ChatReadAloudToggledAction {
+  type: typeof CHAT_READ_ALOUD_TOGGLED;
+}
+
 export type ChatActionTypes =
   | ChatMessageAddedAction
   | ChatMessagesSetAction
@@ -67,4 +72,5 @@ export type ChatActionTypes =
   | ChatH5pGeneratedAction
   | ChatH5pErrorAction
   | ChatPreviewUpdatedAction
-  | ChatSystemPromptChangedAction;
+  | ChatSystemPromptChangedAction
+  | ChatReadAloudToggledAction;
