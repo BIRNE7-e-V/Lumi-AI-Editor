@@ -1,32 +1,23 @@
+import { strToU8, unzipSync, zipSync } from 'fflate';
+
 import type {
   Content,
-  Freetext,
-  TextContent,
-  FillInTheBlanks,
   MultipleChoiceContent,
-} from 'src/sections/editor/types';
-
-import { zipSync, strToU8, unzipSync } from 'fflate';
-
-// ----------------------------------------------------------------------
-// UUID helper (available in all modern browsers)
+} from '@state/lumi-editor/types';
 
 function uuid(): string {
   return crypto.randomUUID();
 }
 
-// ----------------------------------------------------------------------
-// H5P content.json shape helpers
-
-function makeTextItem(item: TextContent) {
+function makeAdvancedTextItem(text: string) {
   return {
     content: {
-      params: { text: `<p>${item.text}</p>` },
+      params: { text: `<p>${text}</p>` },
       library: 'H5P.AdvancedText 1.1',
       metadata: {
         contentType: 'Text',
         license: 'U',
-        title: item.text.slice(0, 40) || 'Text',
+        title: text.slice(0, 40) || 'Text',
         authors: [],
         changes: [],
       },
@@ -41,10 +32,10 @@ function makeMultiChoiceItem(item: MultipleChoiceContent) {
     content: {
       params: {
         question: `<p>${item.question}</p>`,
-        answers: item.answers.map((a) => ({
-          correct: a.correct,
+        answers: item.answers.map((answer) => ({
+          correct: answer.correct,
           tipsAndFeedback: { tip: '', chosenFeedback: '', notChosenFeedback: '' },
-          text: `<div>${a.text}</div>`,
+          text: `<div>${answer.text}</div>`,
         })),
         overallFeedback: [{ from: 0, to: 100 }],
         behaviour: {
@@ -111,59 +102,22 @@ function makeMultiChoiceItem(item: MultipleChoiceContent) {
   };
 }
 
-function makeFillInTheBlanksItem(item: FillInTheBlanks) {
-  return {
-    content: {
-      params: { text: `<p>${item.text}</p>` },
-      library: 'H5P.AdvancedText 1.1',
-      metadata: {
-        contentType: 'Text',
-        license: 'U',
-        title: item.text.slice(0, 40) || 'Text',
-        authors: [],
-        changes: [],
-      },
-      subContentId: uuid(),
-    },
-    useSeparator: 'auto',
-  };
-}
-
-function makeFreetextItem(item: Freetext) {
-  return {
-    content: {
-      params: { text: `<p>${item.task}</p>` },
-      library: 'H5P.AdvancedText 1.1',
-      metadata: {
-        contentType: 'Text',
-        license: 'U',
-        title: item.task.slice(0, 40) || 'Text',
-        authors: [],
-        changes: [],
-      },
-      subContentId: uuid(),
-    },
-    useSeparator: 'auto',
-  };
-}
-
 function contentItemToH5P(item: Content) {
   switch (item.type) {
     case 'text':
-      return makeTextItem(item);
+      return makeAdvancedTextItem(item.text);
     case 'multiple-choice':
       return makeMultiChoiceItem(item);
     case 'fill-in-the-blanks':
-      return makeFillInTheBlanksItem(item);
+      return makeAdvancedTextItem(item.text);
     case 'freetext':
-      return makeFreetextItem(item);
-    default:
-      throw new Error(`Unknown content type: ${(item as Content).type}`);
+      return makeAdvancedTextItem(item.task);
   }
 }
 
 function buildContentJson(title: string, content: Content[]) {
   const chapterTitle = title.trim() || 'Seite 1';
+
   return {
     showCoverPage: false,
     bookCover: { coverDescription: '<p style="text-align:center"></p>' },
@@ -219,8 +173,7 @@ function buildContentJson(title: string, content: Content[]) {
     noChapterInteractionBoldText: 'Du hast noch keine Seiten bearbeitet.',
     noChapterInteractionText:
       'Du musst wenigstens eine Seite bearbeiten, um die Zusammenfassung zu sehen.',
-    yourAnswersAreSubmittedForReview:
-      'Deine Antworten wurden zur Begutachtung versendet!',
+    yourAnswersAreSubmittedForReview: 'Deine Antworten wurden zur Begutachtung versendet!',
     bookProgress: 'Buchfortschritt',
     interactionsProgress: 'Interaktionsfortschritt',
     totalScoreLabel: 'Gesamtpunktzahl',
@@ -254,32 +207,33 @@ function buildH5PJson(title: string) {
   };
 }
 
-// ----------------------------------------------------------------------
-
 export async function generateH5PPackage(title: string, content: Content[]): Promise<Blob> {
-  // Fetch the pre-built library zip (all H5P library folders, no content)
-  const response = await fetch('/h5p/interactive-book-libraries.zip');
+  const response = await fetch(`${import.meta.env.BASE_URL}h5p/interactive-book-libraries.zip`);
+
   if (!response.ok) {
     throw new Error(`Bibliotheks-Paket konnte nicht geladen werden (${response.status})`);
   }
+
   const arrayBuffer = await response.arrayBuffer();
   const files = unzipSync(new Uint8Array(arrayBuffer));
 
-  // Add generated content
   files['content/content.json'] = strToU8(JSON.stringify(buildContentJson(title, content)));
   files['h5p.json'] = strToU8(JSON.stringify(buildH5PJson(title)));
 
   const zipped = zipSync(files, { level: 6 });
-  return new Blob([zipped], { type: 'application/zip' });
+  const zipBytes = new Uint8Array(zipped.byteLength);
+  zipBytes.set(zipped);
+  return new Blob([zipBytes.buffer], { type: 'application/zip' });
 }
 
 export function downloadH5PPackage(blob: Blob, filename: string): void {
   const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = `${filename}.h5p`;
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
+  const anchor = document.createElement('a');
+
+  anchor.href = url;
+  anchor.download = `${filename}.h5p`;
+  document.body.appendChild(anchor);
+  anchor.click();
+  document.body.removeChild(anchor);
   URL.revokeObjectURL(url);
 }
