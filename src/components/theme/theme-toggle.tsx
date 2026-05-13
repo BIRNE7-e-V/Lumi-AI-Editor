@@ -9,7 +9,7 @@ export function ThemeToggle() {
 
   return (
     <button className="btn btn-ghost gap-2" type="button" onClick={toggleMode}>
-      {isDark ? <SunIcon className="size-5" /> : <MoonIcon className="size-5" />}
+      {isDark ? <SunIcon className="size-6" /> : <MoonIcon className="size-6" />}
       <span>{isDark ? 'Hell' : 'Dunkel'}</span>
     </button>
   );

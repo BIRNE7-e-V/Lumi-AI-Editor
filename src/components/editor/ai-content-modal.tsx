@@ -39,7 +39,7 @@ export const AiContentModal = memo(function AiContentModal({
                 : 'Gib den Kontext oder das Thema ein, aus dem ein informativer Text erstellt werden soll.'}
             </p>
           </div>
-          <button className="btn btn-ghost btn-sm btn-circle" type="button" onClick={onClose}>
+          <button className="btn btn-ghost btn-circle" type="button" onClick={onClose}>
             <XMarkIcon className="size-5" />
           </button>
         </div>

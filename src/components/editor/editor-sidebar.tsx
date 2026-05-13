@@ -388,7 +388,7 @@ export const EditorSidebar = memo(function EditorSidebar({
 
           <div className="flex flex-wrap gap-2">
             <button
-              className="btn btn-sm btn-outline gap-2"
+              className="btn btn-outline gap-2"
               disabled={!canUseAi || aiBusy !== null || h5pLoading}
               type="button"
               onClick={() => {
@@ -399,7 +399,7 @@ export const EditorSidebar = memo(function EditorSidebar({
               {aiBusy === 'text-create-root' ? 'KI-Text...' : 'Text mit KI'}
             </button>
             <button
-              className="btn btn-sm btn-outline gap-2"
+              className="btn btn-outline gap-2"
               disabled={!canUseAi || aiBusy !== null || h5pLoading}
               type="button"
               onClick={() => {

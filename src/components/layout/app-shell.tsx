@@ -56,7 +56,7 @@ export function AppShell({ children }: AppShellProps) {
               isEditorRoute ? (
                 <>
                   <button
-                    className="btn btn-ghost btn-sm gap-2"
+                    className="btn btn-ghost gap-2"
                     type="button"
                     onClick={() => {
                       actions.chatCleared();
@@ -66,7 +66,7 @@ export function AppShell({ children }: AppShellProps) {
                     Neues Gespräch
                   </button>
                   <select
-                    className="select select-sm min-w-40 pr-8"
+                    className="select min-w-40 pr-8"
                     value={languageMode}
                     onChange={(event) => {
                       setLanguageMode(event.target.value);
@@ -78,7 +78,7 @@ export function AppShell({ children }: AppShellProps) {
                   </select>
                 </>
               ) : (
-                <Link className="btn btn-ghost btn-sm gap-2" to="/chat">
+                <Link className="btn btn-ghost gap-2" to="/chat">
                   <ArrowLeftIcon className="size-4" />
                   Zurück zum Chat
                 </Link>
@@ -93,20 +93,20 @@ export function AppShell({ children }: AppShellProps) {
                         <span className="indicator-item status status-error" />
                       ) : null}
                       <button
-                        className="btn btn-sm gap-2"
+                        className="btn gap-2"
                         type="button"
                         onClick={() => setSettingsOpen(true)}
                       >
-                        <Cog6ToothIcon className="size-4" />
+                        <Cog6ToothIcon className="size-6" />
                         KI-Einstellungen
                       </button>
                     </div>
                     <button
-                      className="btn btn-ghost btn-sm gap-2"
+                      className="btn btn-ghost gap-2"
                       type="button"
                       onClick={() => setKeybindsOpen(true)}
                     >
-                      <CommandLineIcon className="size-4" />
+                      <CommandLineIcon className="size-6" />
                       Tastenkürzel
                     </button>
                   </>

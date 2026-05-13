@@ -40,7 +40,7 @@ export function Modal({ open, title, description, size = 'lg', onClose, children
           </div>
           <button
             aria-label="Schließen"
-            className="btn btn-circle btn-ghost btn-sm"
+            className="btn btn-circle btn-ghost"
             type="button"
             onClick={onClose}
           >

@@ -1,10 +1,4 @@
-import {
-  type ComponentType,
-  type ReactNode,
-  type SVGProps,
-  useCallback,
-  useState,
-} from 'react';
+import { type ComponentType, type ReactNode, type SVGProps, useCallback, useState } from 'react';
 
 import { twMerge } from 'tailwind-merge';
 
@@ -91,7 +85,7 @@ export function SidePanel({
       <button
         aria-label={`${label} ${open ? 'schließen' : 'öffnen'}`}
         className={twMerge(
-          'btn btn-sm rounded-box border-base-300 bg-base-100 absolute top-3 z-10 h-auto min-h-0 w-10 flex-col gap-2 border px-2 py-4 shadow-sm',
+          'btn rounded-box border-base-300 bg-base-100 absolute top-3 z-10 h-auto min-h-0 w-10 flex-col gap-2 border px-2 py-4 shadow-sm',
           side === 'left' ? 'right-0 translate-x-1/2' : 'left-0 -translate-x-1/2'
         )}
         type="button"
@@ -152,7 +146,7 @@ export function SidePanel({
         <button
           aria-label={`${label} ${open ? 'schließen' : 'öffnen'}`}
           className={twMerge(
-            'btn btn-sm rounded-box bg-base-100 absolute top-3 h-auto min-h-0 w-10 flex-col gap-2 border-transparent px-2 py-4 shadow-none',
+            'btn rounded-box bg-base-100 absolute top-3 h-auto min-h-0 w-10 flex-col gap-2 border-transparent px-2 py-4 shadow-none',
             side === 'left' ? 'right-0 translate-x-1/2' : 'left-0 -translate-x-1/2'
           )}
           type="button"

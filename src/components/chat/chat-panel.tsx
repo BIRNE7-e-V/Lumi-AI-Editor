@@ -316,7 +316,7 @@ export const ChatPanel = memo(function ChatPanel({
 
           {speech.ttsSupported ? (
             <button
-              className={twMerge('btn btn-sm', chat.readAloudEnabled ? 'btn-primary' : 'btn-ghost')}
+              className={twMerge('btn', chat.readAloudEnabled ? 'btn-primary' : 'btn-ghost')}
               type="button"
               onClick={actions.chatReadAloudToggled}
             >
