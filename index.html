@@ -1,14 +1,49 @@
 <!doctype html>
-<html lang="en">
+<html lang="de">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" href="/favicon.ico" />
-    <meta name="theme-color" content="#000000" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Minimal UI Kit</title>
+    <script>
+      (() => {
+        try {
+          const key = 'lumi-theme-mode';
+          const stored = window.localStorage.getItem(key);
+          const mode =
+            stored === 'light' || stored === 'dark'
+              ? stored
+              : window.matchMedia('(prefers-color-scheme: dark)').matches
+                ? 'dark'
+                : 'light';
+          document.documentElement.setAttribute('data-theme', mode);
+          document.documentElement.style.colorScheme = mode;
+        } catch {}
+      })();
+    </script>
+    <link rel="icon" href="/favicon.ico" />
+    <link rel="manifest" href="/manifest.json" />
+    <title>Lumi AI Editor</title>
+    <script>
+      // Restore path encoded by 404.html for SPA routing on GitHub Pages.
+      (function (l) {
+        if (l.search[1] === '/') {
+          var decoded = l.search
+            .slice(1)
+            .split('&')
+            .map(function (s) {
+              return s.replace(/~and~/g, '&');
+            })
+            .join('?');
+          window.history.replaceState(
+            null,
+            null,
+            l.pathname.slice(0, -1) + decoded + l.hash,
+          );
+        }
+      })(window.location);
+    </script>
   </head>
 
-  <body>
+  <body class="bg-base-200 text-base-content min-h-dvh antialiased">
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>

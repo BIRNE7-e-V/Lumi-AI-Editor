@@ -1,11 +1,4 @@
-# Build directories
-build/*
-dist/*
-public/*
-**/out/*
-**/.next/*
-**/node_modules/*
-
-yarn.lock
-package-lock.json
-jsconfig.json
+dist
+node_modules
+src/routeTree.gen.ts
+public

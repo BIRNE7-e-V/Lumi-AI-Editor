@@ -2,10 +2,20 @@ export type ID = string;
 
 export type ProviderType = 'openai';
 
+export interface ModelConfig {
+  id: string;
+  label: string;
+  priceInput: number; // USD per 1M tokens
+  priceCached: number; // USD per 1M tokens
+  priceOutput: number; // USD per 1M tokens
+}
+
 export interface ProviderConfig {
   name: string;
   endpoint: string;
   requiresModel: boolean;
+  defaultModel: string;
+  availableModels: ModelConfig[];
 }
 
 export interface TextContent {
@@ -42,6 +52,8 @@ export interface LumiEditorState {
     provider: ProviderType;
     apiEndpoint: string;
     apiToken: string;
+    apiModel: string;
+    transcriptionLanguage: string;
   };
   title: string;
   content: {

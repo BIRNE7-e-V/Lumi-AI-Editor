@@ -3,6 +3,8 @@ export interface ChatMessage {
   role: 'user' | 'assistant' | 'system';
   content: string;
   createdAt: number;
+  /** Object URL of the recorded audio blob. */
+  audioUrl?: string;
 }
 
 export interface PreviewChapter {
