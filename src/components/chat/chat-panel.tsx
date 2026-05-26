@@ -356,7 +356,7 @@ export function ChatPanel({
               <ChatBubbleLeftRightIcon className="size-5" />
             </div>
             <div>
-              <h2 className="font-semibold">KI-Assistent</h2>
+              <h1 className="font-semibold">KI-Assistent</h1>
               <p className="text-base-content/60 text-xs">
                 Chat, Ideen und geführte Erstellung für das Arbeitsblatt.
               </p>
@@ -383,7 +383,7 @@ export function ChatPanel({
                 <SparklesIcon className="size-8" />
               </div>
               <div className="space-y-2">
-                <h3 className="text-lg font-semibold">Noch keine Unterhaltung</h3>
+                <h2 className="text-lg font-semibold">Noch keine Unterhaltung</h2>
                 <p className="text-base-content/70 max-w-md text-sm leading-6">
                   Frage nach Inhalten, lass dir einen ersten Entwurf erstellen oder arbeite direkt
                   mit dem aktuellen Arbeitsblatt weiter.

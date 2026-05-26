@@ -65,7 +65,11 @@ export function AppShell({ children }: AppShellProps) {
                     <PlusIcon className="size-4" />
                     Neues Gespräch
                   </button>
+                  <label htmlFor="language-mode-select" className="sr-only">
+                    Sprachmodus
+                  </label>
                   <select
+                    id="language-mode-select"
                     className="select min-w-40 pr-8"
                     value={languageMode}
                     onChange={(event) => {
