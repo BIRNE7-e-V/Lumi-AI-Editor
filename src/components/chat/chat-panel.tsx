@@ -13,45 +13,260 @@ import { parseMessage } from '@components/editor/utils';
 import { useSpeech } from '@components/chat/use-speech';
 
 type LanguageModeContent = {
-  greeting: string;
-  audiencePrompt: (topic: string) => string;
-  objectivesPrompt: string;
-  aspectsPrompt: string;
+  greetingText: string;
+  greetingSuggestions: string[];
+  audiencePromptText: (topic: string) => string;
+  audienceSuggestions: string[];
+  objectivesText: string;
+  objectivesSuggestions: string[];
+  aspectsText: string;
+  aspectsSuggestions: string[];
   topicPlaceholder: string;
 };
 
+function pickRandom<T>(arr: T[], n: number): T[] {
+  return [...arr].sort(() => Math.random() - 0.5).slice(0, n);
+}
+
+function withSuggestions(text: string, suggestions: string[]): string {
+  return `${text}\n\n[VORSCHLÄGE: ${suggestions.join(' | ')}]`;
+}
+
 const LANGUAGE_MODE_CONTENT: Record<string, LanguageModeContent> = {
   leichte: {
-    greeting:
-      'Hallo! Ich helfe dir beim Erstellen eines Arbeitsblatts.\n\nWorüber soll dein Arbeitsblatt sein?\n\n[VORSCHLÄGE: Tiere | Zahlen | Mein Alltag]',
-    audiencePrompt: (topic) =>
-      `Super! Dein Arbeitsblatt geht um "${topic}".\n\nFür wen ist es gedacht?\n\n[VORSCHLÄGE: Grundschule | Förderschule | Erwachsene]`,
-    objectivesPrompt:
-      'Was soll man danach wissen oder können?\n\n[VORSCHLÄGE: Etwas Neues lernen | Eine Aufgabe selbst machen | Etwas erklären können]',
-    aspectsPrompt:
-      'Was soll unbedingt vorkommen?\n\n[VORSCHLÄGE: Einfache Erklärungen | Bilder und Beispiele | Klare Schritt-für-Schritt-Aufgaben]',
+    greetingText:
+      'Hallo! Ich helfe dir beim Erstellen eines Arbeitsblatts.\n\nWorüber soll dein Arbeitsblatt sein?',
+    greetingSuggestions: [
+      // Alltag & Leben
+      'Einkaufen und Preise vergleichen',
+      'Einen Brief schreiben',
+      'Eine E-Mail schreiben',
+      'Einen Termin vereinbaren',
+      'Fahrplan lesen und verstehen',
+      'Rezepte lesen und kochen',
+      'Medikamente und Beipackzettel verstehen',
+      'Einen Antrag ausfüllen',
+      'Mit Behörden sprechen',
+      'Wohnung einrichten und organisieren',
+      // Zahlen & Rechnen
+      'Addieren und Subtrahieren',
+      'Multiplizieren und Dividieren',
+      'Brüche verstehen',
+      'Prozente im Alltag',
+      'Uhr lesen und Zeit einteilen',
+      'Geld zählen und wechseln',
+      'Kalender und Datum verstehen',
+      'Messen und Wiegen',
+      'Taschenrechner benutzen',
+      'Tabellen lesen',
+      // Sprache & Lesen
+      'Lesen üben – kurze Texte',
+      'Buchstaben und Laute',
+      'Wörter richtig schreiben',
+      'Sätze bilden',
+      'Texte verstehen und zusammenfassen',
+      'Geschichten nacherzählen',
+      'Reime und Gedichte',
+      'Zeitungsartikel verstehen',
+      'Schilder und Symbole lesen',
+      'Formulare ausfüllen',
+      // Natur & Tiere
+      'Tiere und ihre Lebensräume',
+      'Pflanzen und Bäume erkennen',
+      'Jahreszeiten und Wetter',
+      'Wasser und Gewässer',
+      'Der Körper von Tieren',
+      'Haustiere pflegen',
+      'Insekten und ihre Aufgaben',
+      'Umwelt schützen',
+      'Recycling und Müll trennen',
+      'Wald und Natur erkunden',
+      // Körper & Gesundheit
+      'Der menschliche Körper',
+      'Gesund essen und trinken',
+      'Schlafen und Erholen',
+      'Sport und Bewegung',
+      'Arztbesuch vorbereiten',
+      'Erste Hilfe Grundlagen',
+      'Hygiene im Alltag',
+      'Gefühle und Stimmungen verstehen',
+      'Stress abbauen',
+      'Zähne und Zahnpflege',
+      // Beruf & Arbeit
+      'Einen Lebenslauf schreiben',
+      'Bewerbungsschreiben verstehen',
+      'Ein Vorstellungsgespräch vorbereiten',
+      'Rechte und Pflichten bei der Arbeit',
+      'Arbeitszeiten und Pausen',
+      'Lohnabrechnung lesen',
+      'Teamarbeit und Kommunikation',
+      'Berufe kennenlernen',
+      'Ausbildung und Weiterbildung',
+      'Kündigung und Arbeitslosigkeit',
+      // Technik & Medien
+      'Smartphone benutzen',
+      'Internet sicher nutzen',
+      'E-Mails schreiben und empfangen',
+      'Soziale Medien verstehen',
+      'Passwörter und Datenschutz',
+      'Online-Banking Grundlagen',
+      'Videos und Musik streamen',
+      'Fotos machen und speichern',
+      'Computer und Tastatur',
+      'Apps installieren und nutzen',
+      // Geschichte & Gesellschaft
+      'Deutschland – Geschichte einfach erklärt',
+      'Demokratie und Wahlen',
+      'Gesetze und Regeln',
+      'Europa und die EU',
+      'Menschenrechte',
+      'Wichtige Personen der Geschichte',
+      'Erster und Zweiter Weltkrieg einfach erklärt',
+      'Religionen der Welt',
+      'Kulturen und Bräuche',
+      'Flucht und Migration verstehen',
+      // Kreativität & Freizeit
+      'Malen und Zeichnen',
+      'Basteln und Werken',
+      'Musik hören und verstehen',
+      'Ein Instrument lernen',
+      'Tanzen und Bewegung',
+      'Fotografieren',
+      'Kochen und Backen',
+      'Gärtnern und Pflanzen ziehen',
+      'Spiele und Spielregeln',
+      'Urlaub planen',
+      // Gefühle & Soziales
+      'Freundschaft und Beziehungen',
+      'Konflikte lösen',
+      'Nein sagen und Grenzen setzen',
+      'Selbstbewusstsein stärken',
+      'Hilfe suchen und annehmen',
+      'Einsamkeit und Gesellschaft',
+      'Trauer und Verlust',
+      'Freude und Dankbarkeit',
+      'Familie und Zusammenleben',
+      'Träume und Ziele',
+    ],
+    audiencePromptText: (topic) =>
+      `Super! Dein Arbeitsblatt geht um "${topic}".\n\nFür wen ist es gedacht?`,
+    audienceSuggestions: [
+      'Grundschule',
+      'Förderschule',
+      'Realschule',
+      'Gymnasium',
+      'Erwachsene',
+      'Senioren',
+      'Menschen mit Lernschwierigkeiten',
+    ],
+    objectivesText: 'Was soll man danach wissen oder können?',
+    objectivesSuggestions: [
+      'Etwas Neues lernen',
+      'Eine Aufgabe selbst machen',
+      'Etwas erklären können',
+      'Schritt für Schritt vorgehen',
+      'Üben und wiederholen',
+      'Wichtige Wörter kennen',
+    ],
+    aspectsText: 'Was soll unbedingt vorkommen?',
+    aspectsSuggestions: [
+      'Einfache Erklärungen',
+      'Bilder und Beispiele',
+      'Klare Schritt-für-Schritt-Aufgaben',
+      'Wenig Text',
+      'Große Schrift',
+      'Fragen zum Ankreuzen',
+    ],
     topicPlaceholder: 'Worüber soll das Arbeitsblatt sein?',
   },
   standard: {
-    greeting:
-      'Hallo! Ich helfe dir beim Erstellen eines Arbeitsblatts. Lass uns mit den Grundlagen beginnen.\n\nWelches Thema soll dein Arbeitsblatt behandeln?\n\n[VORSCHLÄGE: Brüche | Photosynthese | Französische Revolution]',
-    audiencePrompt: (topic) =>
-      `Super! Dein Arbeitsblatt wird sich mit "${topic}" befassen.\n\nWer ist die Zielgruppe?\n\n[VORSCHLÄGE: Grundschule | Sekundarstufe I | Erwachsene]`,
-    objectivesPrompt:
-      'Verstanden! Was soll der Lernende nach dem Arbeitsblatt verstehen oder können? Was sind die Lernziele?\n\n[VORSCHLÄGE: Grundkonzepte verstehen | Aufgaben selbständig lösen | Zusammenhänge erklären können]',
-    aspectsPrompt:
-      'Welche Aspekte oder Unterthemen sind besonders wichtig und sollen unbedingt vorkommen?\n\n[VORSCHLÄGE: Alle relevanten Grundlagen | Die wichtigsten Konzepte | Praktische Beispiele]',
+    greetingText:
+      'Hallo! Ich helfe dir beim Erstellen eines Arbeitsblatts. Lass uns mit den Grundlagen beginnen.\n\nWelches Thema soll dein Arbeitsblatt behandeln?',
+    greetingSuggestions: [
+      'Brüche',
+      'Photosynthese',
+      'Französische Revolution',
+      'Klimawandel',
+      'Demokratie',
+      'Geometrie',
+      'Mittelalter',
+      'Ökosysteme',
+      'Grammatik',
+      'Globalisierung',
+    ],
+    audiencePromptText: (topic) =>
+      `Super! Dein Arbeitsblatt wird sich mit "${topic}" befassen.\n\nWer ist die Zielgruppe?`,
+    audienceSuggestions: [
+      'Grundschule',
+      'Sekundarstufe I',
+      'Sekundarstufe II',
+      'Erwachsene',
+      'Berufsschule',
+    ],
+    objectivesText:
+      'Verstanden! Was soll der Lernende nach dem Arbeitsblatt verstehen oder können? Was sind die Lernziele?',
+    objectivesSuggestions: [
+      'Grundkonzepte verstehen',
+      'Aufgaben selbständig lösen',
+      'Zusammenhänge erklären können',
+      'Wissen anwenden',
+      'Fachbegriffe kennen',
+      'Kritisch denken',
+    ],
+    aspectsText:
+      'Welche Aspekte oder Unterthemen sind besonders wichtig und sollen unbedingt vorkommen?',
+    aspectsSuggestions: [
+      'Alle relevanten Grundlagen',
+      'Die wichtigsten Konzepte',
+      'Praktische Beispiele',
+      'Übungsaufgaben',
+      'Definitionen und Begriffe',
+      'Schaubilder und Diagramme',
+    ],
     topicPlaceholder: 'Welches Thema soll behandelt werden?',
   },
   fach: {
-    greeting:
-      'Hallo! Ich unterstütze Sie bei der Entwicklung eines fachlich fundierten Arbeitsblatts.\n\nWelches Thema oder Fachgebiet soll bearbeitet werden?\n\n[VORSCHLÄGE: Differentialrechnung | Organische Chemie | Makroökonomie]',
-    audiencePrompt: (topic) =>
-      `Das Arbeitsblatt wird das Thema „${topic}" behandeln.\n\nFür welche Zielgruppe und Kompetenzstufe ist es konzipiert?\n\n[VORSCHLÄGE: Gymnasium Oberstufe | Hochschule / Studium | Berufsschule Fachklasse]`,
-    objectivesPrompt:
-      'Welche fachlichen Kompetenzen oder Lernziele sollen vermittelt werden?\n\n[VORSCHLÄGE: Konzepte analysieren und anwenden | Fachterminologie sicher verwenden | Komplexe Zusammenhänge modellieren]',
-    aspectsPrompt:
-      'Welche fachlichen Inhalte oder Methoden sollen zwingend integriert werden?\n\n[VORSCHLÄGE: Kerninhalte des Lehrplans | Fachspezifische Methoden und Arbeitsweisen | Verweise auf Primärquellen]',
+    greetingText:
+      'Hallo! Ich unterstütze Sie bei der Entwicklung eines fachlich fundierten Arbeitsblatts.\n\nWelches Thema oder Fachgebiet soll bearbeitet werden?',
+    greetingSuggestions: [
+      'Differentialrechnung',
+      'Organische Chemie',
+      'Makroökonomie',
+      'Quantenmechanik',
+      'Verfassungsrecht',
+      'Literaturtheorie',
+      'Molekularbiologie',
+      'Statistik',
+      'Europäische Integration',
+      'Thermodynamik',
+    ],
+    audiencePromptText: (topic) =>
+      `Das Arbeitsblatt wird das Thema „${topic}" behandeln.\n\nFür welche Zielgruppe und Kompetenzstufe ist es konzipiert?`,
+    audienceSuggestions: [
+      'Gymnasium Oberstufe',
+      'Hochschule / Studium',
+      'Berufsschule Fachklasse',
+      'Masterstudium',
+      'Weiterbildung Fachkräfte',
+    ],
+    objectivesText: 'Welche fachlichen Kompetenzen oder Lernziele sollen vermittelt werden?',
+    objectivesSuggestions: [
+      'Konzepte analysieren und anwenden',
+      'Fachterminologie sicher verwenden',
+      'Komplexe Zusammenhänge modellieren',
+      'Wissenschaftlich argumentieren',
+      'Methoden kritisch reflektieren',
+      'Forschungsergebnisse interpretieren',
+    ],
+    aspectsText: 'Welche fachlichen Inhalte oder Methoden sollen zwingend integriert werden?',
+    aspectsSuggestions: [
+      'Kerninhalte des Lehrplans',
+      'Fachspezifische Methoden und Arbeitsweisen',
+      'Verweise auf Primärquellen',
+      'Aktuelle Forschungsbefunde',
+      'Interdisziplinäre Bezüge',
+      'Fallstudien und Anwendungsbeispiele',
+    ],
     topicPlaceholder: 'Welches Fachthema soll behandelt werden?',
   },
 };
@@ -113,7 +328,10 @@ export function ChatPanel({
       {
         id: crypto.randomUUID(),
         role: 'assistant',
-        content: modeContent.greeting,
+        content: withSuggestions(
+          modeContent.greetingText,
+          pickRandom(modeContent.greetingSuggestions, 3)
+        ),
         createdAt: Date.now(),
       },
     ]);
@@ -142,7 +360,10 @@ export function ChatPanel({
         actions.chatMessageAdded({
           id: crypto.randomUUID(),
           role: 'assistant',
-          content: content.audiencePrompt(value),
+          content: withSuggestions(
+            content.audiencePromptText(value),
+            pickRandom(content.audienceSuggestions, 3)
+          ),
           createdAt: Date.now(),
         });
         setCreationState((prev) => ({
@@ -161,7 +382,10 @@ export function ChatPanel({
         actions.chatMessageAdded({
           id: crypto.randomUUID(),
           role: 'assistant',
-          content: content.objectivesPrompt,
+          content: withSuggestions(
+            content.objectivesText,
+            pickRandom(content.objectivesSuggestions, 3)
+          ),
           createdAt: Date.now(),
         });
         setCreationState((prev) => ({ ...prev, step: 'asking_objectives', audience: value }));
@@ -173,7 +397,7 @@ export function ChatPanel({
         actions.chatMessageAdded({
           id: crypto.randomUUID(),
           role: 'assistant',
-          content: content.aspectsPrompt,
+          content: withSuggestions(content.aspectsText, pickRandom(content.aspectsSuggestions, 3)),
           createdAt: Date.now(),
         });
         setCreationState((prev) => ({ ...prev, step: 'asking_aspects', objectives: value }));
