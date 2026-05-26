@@ -32,7 +32,8 @@ export function ChatPage() {
 
   useEffect(() => {
     localStorage.setItem('sprache', languageMode);
-  }, [languageMode]);
+    actions.chatLanguageModeChanged(languageMode);
+  }, [languageMode, actions]);
 
   const startGuidedCreation = useCallback(() => {
     if (!canUseAi) {

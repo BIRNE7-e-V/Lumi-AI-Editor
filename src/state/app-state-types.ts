@@ -19,6 +19,7 @@ export interface ChatState {
   previewDoc: PreviewDocument | null;
   customSystemPrompt: string | null;
   readAloudEnabled: boolean;
+  languageMode: string;
 }
 
 export type GenerationOptions = {
@@ -42,6 +43,7 @@ export type AppActions = {
   chatPreviewUpdated: (markdown: string, doc: PreviewDocument) => void;
   chatReadAloudToggled: () => void;
   chatSystemPromptChanged: (prompt: string | null) => void;
+  chatLanguageModeChanged: (mode: string) => void;
   providerChanged: (provider: ProviderType) => void;
   apiEndpointChanged: (apiEndpoint: string) => void;
   apiTokenChanged: (apiToken: string) => void;

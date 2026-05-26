@@ -72,6 +72,7 @@ function getInitialChatState(): ChatState {
     previewDoc: null,
     customSystemPrompt: loadFromLocalStorage<string | null>('custom_system_prompt', null),
     readAloudEnabled: false,
+    languageMode: loadFromLocalStorage<string>('sprache', 'standard'),
   };
 }
 
@@ -329,7 +330,13 @@ function resolveAssistantContent(
   if (appliedPayload) applyUpdate(appliedPayload);
 
   const content = (payload ? displayText : codeBlock?.payload ? codeBlock.displayText : raw).trim();
-  return content || fallbackMessage;
+  const textOnly = content.replace(/\[VORSCHLÄGE:[^\]]+\]/g, '').trim();
+  if (!textOnly) {
+    const suggestionsTag = content.match(/\[VORSCHLÄGE:[^\]]+\]/)?.[0];
+    const fallbackBase = fallbackMessage.replace(/\n*\[VORSCHLÄGE:[^\]]+\]$/g, '').trim();
+    return suggestionsTag ? `${fallbackBase}\n\n${suggestionsTag}` : fallbackMessage;
+  }
+  return content;
 }
 
 const USAGE_BY_MODEL_KEY = 'ai_usage_by_model';
@@ -570,7 +577,7 @@ export function AppStateProvider({ children }: { children: React.ReactNode }) {
           [
             {
               role: 'system',
-              content: chat.customSystemPrompt ?? buildSystemPrompt(title, content),
+              content: chat.customSystemPrompt ?? buildSystemPrompt(title, content, chat.languageMode),
             },
             ...messages.map((message, index) =>
               index === messages.length - 1 && message.role === 'user'
@@ -693,7 +700,7 @@ export function AppStateProvider({ children }: { children: React.ReactNode }) {
         }));
 
         try {
-          const systemPrompt = `${buildSystemPrompt(title, content)}
+          const systemPrompt = `${buildSystemPrompt(title, content, chatRef.current.languageMode)}
 
 <instruction_override>
 Du hast alle nötigen Informationen gesammelt:
@@ -789,6 +796,8 @@ Behalte das [WORKSHEET_UPDATE]-Format aus dem structured_output_contract exakt b
         })),
       chatSystemPromptChanged: (prompt) =>
         setChatState((prev) => ({ ...prev, customSystemPrompt: prompt })),
+      chatLanguageModeChanged: (mode) =>
+        setChatState((prev) => ({ ...prev, languageMode: mode })),
 
       providerChanged: (provider) =>
         setEditorState((prev) => ({

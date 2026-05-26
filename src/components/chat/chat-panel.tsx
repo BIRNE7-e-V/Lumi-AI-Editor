@@ -5,12 +5,56 @@ import {
   SparklesIcon,
   StopCircleIcon,
 } from '@heroicons/react/24/outline';
-import { memo, useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { twMerge } from 'tailwind-merge';
 
 import { useAppActions, useChatState, useEditorState } from '@state';
 import { parseMessage } from '@components/editor/utils';
 import { useSpeech } from '@components/chat/use-speech';
+
+type LanguageModeContent = {
+  greeting: string;
+  audiencePrompt: (topic: string) => string;
+  objectivesPrompt: string;
+  aspectsPrompt: string;
+  topicPlaceholder: string;
+};
+
+const LANGUAGE_MODE_CONTENT: Record<string, LanguageModeContent> = {
+  leichte: {
+    greeting:
+      'Hallo! Ich helfe dir beim Erstellen eines Arbeitsblatts.\n\nWorüber soll dein Arbeitsblatt sein?\n\n[VORSCHLÄGE: Tiere | Zahlen | Mein Alltag]',
+    audiencePrompt: (topic) =>
+      `Super! Dein Arbeitsblatt geht um "${topic}".\n\nFür wen ist es gedacht?\n\n[VORSCHLÄGE: Grundschule | Förderschule | Erwachsene]`,
+    objectivesPrompt:
+      'Was soll man danach wissen oder können?\n\n[VORSCHLÄGE: Etwas Neues lernen | Eine Aufgabe selbst machen | Etwas erklären können]',
+    aspectsPrompt:
+      'Was soll unbedingt vorkommen?\n\n[VORSCHLÄGE: Einfache Erklärungen | Bilder und Beispiele | Klare Schritt-für-Schritt-Aufgaben]',
+    topicPlaceholder: 'Worüber soll das Arbeitsblatt sein?',
+  },
+  standard: {
+    greeting:
+      'Hallo! Ich helfe dir beim Erstellen eines Arbeitsblatts. Lass uns mit den Grundlagen beginnen.\n\nWelches Thema soll dein Arbeitsblatt behandeln?\n\n[VORSCHLÄGE: Brüche | Photosynthese | Französische Revolution]',
+    audiencePrompt: (topic) =>
+      `Super! Dein Arbeitsblatt wird sich mit "${topic}" befassen.\n\nWer ist die Zielgruppe?\n\n[VORSCHLÄGE: Grundschule | Sekundarstufe I | Erwachsene]`,
+    objectivesPrompt:
+      'Verstanden! Was soll der Lernende nach dem Arbeitsblatt verstehen oder können? Was sind die Lernziele?\n\n[VORSCHLÄGE: Grundkonzepte verstehen | Aufgaben selbständig lösen | Zusammenhänge erklären können]',
+    aspectsPrompt:
+      'Welche Aspekte oder Unterthemen sind besonders wichtig und sollen unbedingt vorkommen?\n\n[VORSCHLÄGE: Alle relevanten Grundlagen | Die wichtigsten Konzepte | Praktische Beispiele]',
+    topicPlaceholder: 'Welches Thema soll behandelt werden?',
+  },
+  fach: {
+    greeting:
+      'Hallo! Ich unterstütze Sie bei der Entwicklung eines fachlich fundierten Arbeitsblatts.\n\nWelches Thema oder Fachgebiet soll bearbeitet werden?\n\n[VORSCHLÄGE: Differentialrechnung | Organische Chemie | Makroökonomie]',
+    audiencePrompt: (topic) =>
+      `Das Arbeitsblatt wird das Thema „${topic}" behandeln.\n\nFür welche Zielgruppe und Kompetenzstufe ist es konzipiert?\n\n[VORSCHLÄGE: Gymnasium Oberstufe | Hochschule / Studium | Berufsschule Fachklasse]`,
+    objectivesPrompt:
+      'Welche fachlichen Kompetenzen oder Lernziele sollen vermittelt werden?\n\n[VORSCHLÄGE: Konzepte analysieren und anwenden | Fachterminologie sicher verwenden | Komplexe Zusammenhänge modellieren]',
+    aspectsPrompt:
+      'Welche fachlichen Inhalte oder Methoden sollen zwingend integriert werden?\n\n[VORSCHLÄGE: Kerninhalte des Lehrplans | Fachspezifische Methoden und Arbeitsweisen | Verweise auf Primärquellen]',
+    topicPlaceholder: 'Welches Fachthema soll behandelt werden?',
+  },
+};
 
 type CreationState = {
   step:
@@ -35,7 +79,7 @@ const INITIAL_CREATION_STATE: CreationState = {
   aspects: '',
 };
 
-export const ChatPanel = memo(function ChatPanel({
+export function ChatPanel({
   canUseAi,
   guidedCreationToken = 0,
   onStartGuidedCreation,
@@ -49,6 +93,9 @@ export const ChatPanel = memo(function ChatPanel({
   const actions = useAppActions();
   const [chatInput, setChatInput] = useState('');
   const [creationState, setCreationState] = useState<CreationState>(INITIAL_CREATION_STATE);
+  const content = LANGUAGE_MODE_CONTENT[chat.languageMode] ?? LANGUAGE_MODE_CONTENT.standard;
+  const languageModeRef = useRef(chat.languageMode);
+  languageModeRef.current = chat.languageMode;
   const endRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const rootRef = useRef<HTMLElement>(null);
@@ -60,12 +107,13 @@ export const ChatPanel = memo(function ChatPanel({
       return;
     }
 
+    const modeContent =
+      LANGUAGE_MODE_CONTENT[languageModeRef.current] ?? LANGUAGE_MODE_CONTENT.standard;
     actions.chatMessagesSet([
       {
         id: crypto.randomUUID(),
         role: 'assistant',
-        content:
-          'Hallo! Ich helfe dir beim Erstellen eines Arbeitsblatts. Lass uns mit den Grundlagen beginnen.\n\nWelches Thema soll dein Arbeitsblatt behandeln?\n\n[VORSCHLÄGE: Brüche | Photosynthese | Französische Revolution]',
+        content: modeContent.greeting,
         createdAt: Date.now(),
       },
     ]);
@@ -94,16 +142,17 @@ export const ChatPanel = memo(function ChatPanel({
         actions.chatMessageAdded({
           id: crypto.randomUUID(),
           role: 'assistant',
-          content: `Super! Dein Arbeitsblatt wird sich mit "${value}" befassen.\n\nWer ist die Zielgruppe?\n\n[VORSCHLÄGE: Grundschule | Sekundarstufe I | Erwachsene]`,
+          content: content.audiencePrompt(value),
           createdAt: Date.now(),
         });
-        setCreationState({
+        setCreationState((prev) => ({
+          ...prev,
           step: 'asking_audience',
           topic: value,
           audience: '',
           objectives: '',
           aspects: '',
-        });
+        }));
         return;
       }
 
@@ -112,7 +161,7 @@ export const ChatPanel = memo(function ChatPanel({
         actions.chatMessageAdded({
           id: crypto.randomUUID(),
           role: 'assistant',
-          content: `Verstanden! Was soll der Lernende nach dem Arbeitsblatt verstehen oder können? Was sind die Lernziele?\n\n[VORSCHLÄGE: Grundkonzepte verstehen | Aufgaben selbständig lösen | Zusammenhänge erklären können]`,
+          content: content.objectivesPrompt,
           createdAt: Date.now(),
         });
         setCreationState((prev) => ({ ...prev, step: 'asking_objectives', audience: value }));
@@ -124,7 +173,7 @@ export const ChatPanel = memo(function ChatPanel({
         actions.chatMessageAdded({
           id: crypto.randomUUID(),
           role: 'assistant',
-          content: `Welche Aspekte oder Unterthemen sind besonders wichtig und sollen unbedingt vorkommen?\n\n[VORSCHLÄGE: Alle relevanten Grundlagen | Die wichtigsten Konzepte | Praktische Beispiele]`,
+          content: content.aspectsPrompt,
           createdAt: Date.now(),
         });
         setCreationState((prev) => ({ ...prev, step: 'asking_aspects', objectives: value }));
@@ -136,7 +185,7 @@ export const ChatPanel = memo(function ChatPanel({
         setCreationState((prev) => ({ ...prev, step: 'generating', aspects: value }));
 
         try {
-          const updatedState = { ...creationState, step: 'generating' as const, aspects: value };
+          const updatedState = { ...creationState, aspects: value };
           const { assistantMessage } = await actions.sendChatMessage({
             userInput: value,
             creationState: updatedState,
@@ -158,7 +207,7 @@ export const ChatPanel = memo(function ChatPanel({
         }
       }
     },
-    [actions, creationState]
+    [actions, creationState, content]
   );
 
   const handleTranscript = useCallback((text: string, audioUrl?: string) => {
@@ -495,7 +544,7 @@ export const ChatPanel = memo(function ChatPanel({
                 className="input input-bordered w-full"
                 placeholder={
                   creationState.step === 'asking_topic'
-                    ? 'Welches Thema soll behandelt werden?'
+                    ? content.topicPlaceholder
                     : creationState.step === 'asking_audience'
                       ? 'Wer ist die Zielgruppe?'
                       : 'Schreibe eine Nachricht an Lumi...'
@@ -530,4 +579,4 @@ export const ChatPanel = memo(function ChatPanel({
       </div>
     </section>
   );
-});
+}

@@ -82,6 +82,7 @@ Ablauf des Gesprächs:
 Vorschläge:
 Biete dem Nutzer am Ende der sichtbaren Nachricht 2 bis 3 mögliche Antworten an:
 [VORSCHLÄGE: Mögliche Antwort 1 | Mögliche Antwort 2 | Mögliche Antwort 3]
+Stelle den Vorschlägen immer einen kurzen einleitenden Satz voran, z. B. "Hier sind ein paar Vorschläge, wie es weitergehen könnte:" – niemals nur den Tag allein.
 
 Was in das WORKSHEET_UPDATE gehört:
 - "title": der Titel des Arbeitsblatts (Thema)
@@ -93,10 +94,20 @@ Was NICHT in das WORKSHEET_UPDATE gehört:
 - Alles, was nur zur Gesprächsführung dient"
 `;
 
-export function buildSystemPrompt(title: string, content: Content[]): string {
-  const editorState = serializeEditorState(title, content);
+const LANGUAGE_MODE_INSTRUCTIONS: Record<string, string> = {
+  leichte:
+    'Schreibe in Leichter Sprache: kurze Sätze (max. 8 Wörter), einfache alltägliche Wörter, aktive Satzform, keine Fremdwörter.',
+  fach: 'Schreibe in Fachsprache: präzise Fachterminologie, komplexere Satzstrukturen, akademisch-sachlicher Stil.',
+};
 
-  return `${DEFAULT_SYSTEM_PROMPT}
+export function buildSystemPrompt(title: string, content: Content[], languageMode = 'standard'): string {
+  const editorState = serializeEditorState(title, content);
+  const languageInstruction = LANGUAGE_MODE_INSTRUCTIONS[languageMode];
+  const languageBlock = languageInstruction
+    ? `\n\n<language_mode>\n${languageInstruction}\n</language_mode>`
+    : '';
+
+  return `${DEFAULT_SYSTEM_PROMPT}${languageBlock}
 
   Aktueller Zustand des Arbeitsblatts:
   ${editorState}`;
