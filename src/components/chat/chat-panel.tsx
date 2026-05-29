@@ -172,7 +172,7 @@ const LANGUAGE_MODE_CONTENT: Record<string, LanguageModeContent> = {
     aspectsText: 'Was soll unbedingt vorkommen?',
     aspectsSuggestions: [
       'Einfache Erklärungen',
-      'Bilder und Beispiele',
+      'Beispiele',
       'Klare Schritt-für-Schritt-Aufgaben',
       'Wenig Text',
       'Große Schrift',
