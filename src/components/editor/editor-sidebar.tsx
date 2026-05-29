@@ -36,7 +36,7 @@ const EmptyState = memo(function EmptyState({
           </p>
         </div>
         <button
-          className="btn btn-primary gap-2"
+          className="btn btn-primary btn-lg gap-2"
           disabled={!canUseAi}
           type="button"
           onClick={onStartGuidedCreation}
@@ -66,7 +66,7 @@ const TitleField = memo(function TitleField({
     <label className="form-control gap-2">
       <span className="label-text font-medium">Titel</span>
       <input
-        className="input input-bordered w-full"
+        className="input input-bordered input-lg w-full"
         placeholder="Titel des Arbeitsblatts"
         value={draft}
         onBlur={() => {
@@ -374,7 +374,7 @@ export const EditorSidebar = memo(function EditorSidebar({
             {CONTENT_ACTIONS.map((option) => (
               <button
                 key={option.type}
-                className="btn btn-outline h-auto min-h-0 gap-1.5 px-3 py-2 text-xs leading-tight whitespace-normal"
+                className="btn btn-outline btn-lg h-auto min-h-0 gap-1.5 px-3 py-2 text-xs leading-tight whitespace-normal"
                 type="button"
                 onClick={() => {
                   actions.worksheetContentAdded({ content: createContent(option.type), index: 0 });
@@ -388,7 +388,7 @@ export const EditorSidebar = memo(function EditorSidebar({
 
           <div className="flex flex-wrap gap-2">
             <button
-              className="btn btn-outline gap-2"
+              className="btn btn-outline btn-lg gap-2"
               disabled={!canUseAi || aiBusy !== null || h5pLoading}
               type="button"
               onClick={() => {
@@ -399,7 +399,7 @@ export const EditorSidebar = memo(function EditorSidebar({
               {aiBusy === 'text-create-root' ? 'KI-Text...' : 'Text mit KI'}
             </button>
             <button
-              className="btn btn-outline gap-2"
+              className="btn btn-outline btn-lg gap-2"
               disabled={!canUseAi || aiBusy !== null || h5pLoading}
               type="button"
               onClick={() => {
@@ -467,7 +467,7 @@ export const EditorSidebar = memo(function EditorSidebar({
           </div>
         ) : null}
         <button
-          className="btn btn-outline w-full gap-2"
+          className="btn btn-outline btn-lg w-full gap-2"
           disabled={orderedContent.length === 0 || aiBusy !== null || h5pLoading}
           type="button"
           onClick={() => {

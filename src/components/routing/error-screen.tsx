@@ -23,7 +23,7 @@ export function RouteErrorScreen({ error, reset }: ErrorComponentProps) {
           ) : null}
 
           <div className="card-actions justify-end">
-            <button className="btn btn-primary" type="button" onClick={() => reset()}>
+            <button className="btn btn-primary btn-lg" type="button" onClick={() => reset()}>
               Try again
             </button>
           </div>

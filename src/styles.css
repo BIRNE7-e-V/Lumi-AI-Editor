@@ -139,3 +139,11 @@ body {
 .text-balance {
   text-wrap: balance;
 }
+
+.btn {
+  transition: transform 0.15s ease;
+}
+
+.btn:hover:not(:disabled) {
+  transform: scale(1.1);
+}

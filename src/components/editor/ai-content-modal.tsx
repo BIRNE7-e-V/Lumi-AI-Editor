@@ -39,7 +39,7 @@ export const AiContentModal = memo(function AiContentModal({
                 : 'Gib den Kontext oder das Thema ein, aus dem ein informativer Text erstellt werden soll.'}
             </p>
           </div>
-          <button className="btn btn-ghost btn-circle" type="button" onClick={onClose}>
+          <button className="btn btn-ghost btn-circle btn-lg" type="button" onClick={onClose}>
             <XMarkIcon className="size-5" />
           </button>
         </div>
@@ -54,7 +54,7 @@ export const AiContentModal = memo(function AiContentModal({
           <label className="form-control gap-2">
             <span className="label-text font-medium">Kontext</span>
             <textarea
-              className="textarea textarea-bordered min-h-40 w-full"
+              className="textarea textarea-bordered textarea-lg min-h-40 w-full"
               disabled={loading}
               placeholder={
                 isQuestion
@@ -68,11 +68,11 @@ export const AiContentModal = memo(function AiContentModal({
         </div>
 
         <div className="border-base-300 flex items-center justify-end gap-2 border-t px-5 py-4">
-          <button className="btn btn-ghost" disabled={loading} type="button" onClick={onClose}>
+          <button className="btn btn-ghost btn-lg" disabled={loading} type="button" onClick={onClose}>
             Abbrechen
           </button>
           <button
-            className="btn btn-primary gap-2"
+            className="btn btn-primary btn-lg gap-2"
             disabled={loading || !canUseAi || !state.context.trim()}
             type="button"
             onClick={onGenerate}

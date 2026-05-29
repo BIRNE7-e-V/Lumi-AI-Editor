@@ -8,7 +8,7 @@ export function ThemeToggle() {
   const isDark = mode === 'dark';
 
   return (
-    <button className="btn btn-ghost gap-2" type="button" onClick={toggleMode}>
+    <button className="btn btn-ghost btn-lg gap-2" type="button" onClick={toggleMode}>
       {isDark ? <SunIcon className="size-6" /> : <MoonIcon className="size-6" />}
       <span>{isDark ? 'Hell' : 'Dunkel'}</span>
     </button>

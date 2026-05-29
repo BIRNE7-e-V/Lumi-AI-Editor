@@ -56,7 +56,7 @@ export function AppShell({ children }: AppShellProps) {
               isEditorRoute ? (
                 <>
                   <button
-                    className="btn btn-ghost gap-2"
+                    className="btn btn-ghost btn-lg gap-2"
                     type="button"
                     onClick={() => {
                       actions.chatCleared();
@@ -70,7 +70,7 @@ export function AppShell({ children }: AppShellProps) {
                   </label>
                   <select
                     id="language-mode-select"
-                    className="select min-w-40 pr-8"
+                    className="select select-lg min-w-40 pr-8"
                     value={languageMode}
                     onChange={(event) => {
                       setLanguageMode(event.target.value);
@@ -82,7 +82,7 @@ export function AppShell({ children }: AppShellProps) {
                   </select>
                 </>
               ) : (
-                <Link className="btn btn-ghost gap-2" to="/chat">
+                <Link className="btn btn-ghost btn-lg gap-2" to="/chat">
                   <ArrowLeftIcon className="size-4" />
                   Zurück zum Chat
                 </Link>
@@ -97,7 +97,7 @@ export function AppShell({ children }: AppShellProps) {
                         <span className="indicator-item status status-error" />
                       ) : null}
                       <button
-                        className="btn gap-2"
+                        className="btn btn-lg gap-2"
                         type="button"
                         onClick={() => setSettingsOpen(true)}
                       >
@@ -106,7 +106,7 @@ export function AppShell({ children }: AppShellProps) {
                       </button>
                     </div>
                     <button
-                      className="btn btn-ghost gap-2"
+                      className="btn btn-ghost btn-lg gap-2"
                       type="button"
                       onClick={() => setKeybindsOpen(true)}
                     >

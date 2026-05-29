@@ -171,7 +171,7 @@ export const PreviewSidebar = memo(function PreviewSidebar() {
 
       <div className="border-base-300 shrink-0 border-t px-5 py-4">
         <button
-          className="btn btn-primary w-full gap-2"
+          className="btn btn-primary btn-lg w-full gap-2"
           disabled={!hasContent}
           type="button"
           onClick={() => {

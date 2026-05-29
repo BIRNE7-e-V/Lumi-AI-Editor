@@ -40,7 +40,7 @@ const TextareaField = memo(function TextareaField({
     <label className="form-control gap-2">
       <span className="label-text font-medium">{label}</span>
       <textarea
-        className={twMerge('textarea textarea-bordered w-full', minHeightClass)}
+        className={twMerge('textarea textarea-bordered textarea-lg w-full', minHeightClass)}
         placeholder={placeholder}
         value={draft}
         onBlur={() => {
@@ -81,7 +81,7 @@ const MultipleChoiceEditorCard = memo(function MultipleChoiceEditorCard({
       <label className="form-control gap-2">
         <span className="label-text font-medium">Frage</span>
         <textarea
-          className="textarea textarea-bordered min-h-24 w-full"
+          className="textarea textarea-bordered textarea-lg min-h-24 w-full"
           placeholder="Formuliere eine Frage..."
           value={questionDraft}
           onBlur={() => {
@@ -115,7 +115,7 @@ const MultipleChoiceEditorCard = memo(function MultipleChoiceEditorCard({
               }}
             />
             <input
-              className="input input-ghost h-10 w-full bg-transparent"
+              className="input input-ghost input-lg h-10 w-full bg-transparent"
               placeholder={`Antwort ${index + 1}`}
               value={answersDraft[index]?.text ?? ''}
               onBlur={() => {
@@ -154,7 +154,7 @@ function ContentTypeMenu({
 }) {
   return (
     <details className="dropdown dropdown-end">
-      <summary className="btn btn-ghost btn-xs gap-1">
+      <summary className="btn btn-ghost btn-sm gap-1">
         {summaryIcon}
         {summaryLabel}
       </summary>
@@ -310,7 +310,7 @@ export const EditorContentCard = memo(function EditorContentCard({
               {contentTypeLabel(item.type)}
             </div>
             <button
-              className="btn btn-ghost btn-xs cursor-grab"
+              className="btn btn-ghost btn-sm cursor-grab"
               draggable
               type="button"
               onDragEnd={onDragEnd}
@@ -322,7 +322,7 @@ export const EditorContentCard = memo(function EditorContentCard({
 
           <div className="flex items-center gap-1">
             <button
-              className="btn btn-ghost btn-xs"
+              className="btn btn-ghost btn-sm"
               disabled={index === 0}
               type="button"
               onClick={() => move(-1)}
@@ -330,17 +330,17 @@ export const EditorContentCard = memo(function EditorContentCard({
               ↑
             </button>
             <button
-              className="btn btn-ghost btn-xs"
+              className="btn btn-ghost btn-sm"
               disabled={index === total - 1}
               type="button"
               onClick={() => move(1)}
             >
               ↓
             </button>
-            <button className="btn btn-ghost btn-xs" type="button" onClick={duplicate}>
+            <button className="btn btn-ghost btn-sm" type="button" onClick={duplicate}>
               <DocumentDuplicateIcon className="size-4" />
             </button>
-            <button className="btn btn-ghost btn-xs text-error" type="button" onClick={remove}>
+            <button className="btn btn-ghost btn-sm text-error" type="button" onClick={remove}>
               <TrashIcon className="size-4" />
             </button>
           </div>

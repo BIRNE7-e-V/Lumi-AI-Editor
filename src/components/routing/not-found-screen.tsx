@@ -13,7 +13,7 @@ export function NotFoundScreen() {
             </p>
           </div>
           <div className="card-actions">
-            <Link className="btn btn-primary" to="/">
+            <Link className="btn btn-primary btn-lg" to="/">
               Zur Startseite
             </Link>
           </div>

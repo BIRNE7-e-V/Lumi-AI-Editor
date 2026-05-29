@@ -109,7 +109,7 @@ export const SettingsModal = memo(function SettingsModal({
           <div className="rounded-box border-base-300 bg-base-200/70 w-full border p-4">
             <div className="flex w-full gap-2">
               <FieldLabel label="Provider">
-                <select className="select select-bordered w-full" value={editor.apiConfig.provider}>
+                <select className="select select-bordered select-lg w-full" value={editor.apiConfig.provider}>
                   {Object.entries(PROVIDERS).map(([id, p]) => (
                     <option key={id} value={id}>
                       {p.name}
@@ -119,7 +119,7 @@ export const SettingsModal = memo(function SettingsModal({
               </FieldLabel>
               <FieldLabel label="Modell">
                 <select
-                  className="select select-bordered w-full"
+                  className="select select-bordered select-lg w-full"
                   value={editor.apiConfig.apiModel}
                   onChange={(event) => actions.apiModelChanged(event.target.value)}
                 >
@@ -132,7 +132,7 @@ export const SettingsModal = memo(function SettingsModal({
               </FieldLabel>
               <FieldLabel label="API-Token">
                 <input
-                  className="input input-bordered w-full"
+                  className="input input-bordered input-lg w-full"
                   placeholder="sk-..."
                   // type="password"
                   value={editor.apiConfig.apiToken}
@@ -149,7 +149,7 @@ export const SettingsModal = memo(function SettingsModal({
             hint="Optional. Überschreibt den automatisch erzeugten Prompt für Lumi."
           >
             <textarea
-              className="textarea textarea-bordered min-h-48 w-full"
+              className="textarea textarea-bordered textarea-lg min-h-48 w-full"
               placeholder="Optionaler benutzerdefinierter Prompt für Lumi"
               value={systemPromptDraft}
               onChange={(event) => setSystemPromptDraft(event.target.value)}
@@ -163,7 +163,7 @@ export const SettingsModal = memo(function SettingsModal({
               Token-Verbrauch (kumuliert)
             </span>
             <button
-              className="btn btn-ghost btn-xs"
+              className="btn btn-ghost btn-sm"
               type="button"
               onClick={() => {
                 localStorage.removeItem(USAGE_BY_MODEL_KEY);
@@ -229,7 +229,7 @@ export const SettingsModal = memo(function SettingsModal({
 
         <div className="border-base-300 flex flex-col gap-3 border-t pt-4 sm:flex-row sm:items-center sm:justify-between">
           <button
-            className="btn btn-ghost"
+            className="btn btn-ghost btn-lg"
             type="button"
             onClick={() => {
               setSystemPromptDraft('');
@@ -240,11 +240,11 @@ export const SettingsModal = memo(function SettingsModal({
           </button>
 
           <div className="flex flex-col gap-2 sm:flex-row">
-            <button className="btn btn-ghost" type="button" onClick={onClose}>
+            <button className="btn btn-ghost btn-lg" type="button" onClick={onClose}>
               Abbrechen
             </button>
             <button
-              className="btn btn-primary"
+              className="btn btn-primary btn-lg"
               type="button"
               onClick={() => {
                 actions.chatSystemPromptChanged(

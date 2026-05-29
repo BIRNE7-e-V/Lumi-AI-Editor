@@ -4,6 +4,7 @@ import {
   SpeakerWaveIcon,
   SparklesIcon,
   StopCircleIcon,
+  SpeakerXMarkIcon,
 } from '@heroicons/react/24/outline';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { twMerge } from 'tailwind-merge';
@@ -589,10 +590,15 @@ export function ChatPanel({
 
           {speech.ttsSupported ? (
             <button
-              className={twMerge('btn', chat.readAloudEnabled ? 'btn-primary' : 'btn-ghost')}
+              className={twMerge('btn btn-lg', chat.readAloudEnabled ? 'btn-primary' : 'btn-ghost')}
               type="button"
               onClick={actions.chatReadAloudToggled}
             >
+              {chat.readAloudEnabled ? (
+                <SpeakerXMarkIcon className="size-6" />
+              ) : (
+                <SpeakerWaveIcon className="size-6" />
+              )}
               {chat.readAloudEnabled ? 'Vorlesen deaktivieren' : 'Alle Antworten vorlesen'}
             </button>
           ) : null}
@@ -614,7 +620,7 @@ export function ChatPanel({
                 </p>
               </div>
               <button
-                className="btn btn-outline btn-primary gap-2"
+                className="btn btn-outline btn-primary btn-lg gap-2"
                 disabled={!canUseAi}
                 type="button"
                 onClick={onStartGuidedCreation}
@@ -657,7 +663,7 @@ export function ChatPanel({
                     {isAssistant && speech.ttsSupported ? (
                       <div className="mt-3 flex justify-start">
                         <button
-                          className="btn btn-secondary btn-outline btn-xs flex cursor-pointer items-center gap-1"
+                          className="btn btn-secondary btn-outline btn-sm flex cursor-pointer items-center gap-1"
                           type="button"
                           onClick={() => {
                             if (isSpeaking) {
@@ -741,7 +747,7 @@ export function ChatPanel({
 
           <div className="flex items-end gap-3">
             <button
-              className={twMerge('btn btn-outline', speech.isListening && 'btn-error')}
+              className={twMerge('btn btn-outline btn-lg', speech.isListening && 'btn-error')}
               data-chat-record-button="true"
               disabled={
                 !speech.isListening &&
@@ -765,7 +771,7 @@ export function ChatPanel({
               <input
                 ref={inputRef}
                 data-chat-input="true"
-                className="input input-bordered w-full"
+                className="input input-bordered input-lg w-full"
                 placeholder={
                   creationState.step === 'asking_topic'
                     ? content.topicPlaceholder
@@ -784,7 +790,7 @@ export function ChatPanel({
               />
             </label>
             <button
-              className="btn btn-primary"
+              className="btn btn-primary btn-lg"
               disabled={
                 !chatInput.trim() ||
                 !canUseAi ||
