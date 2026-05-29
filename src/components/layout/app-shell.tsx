@@ -28,7 +28,7 @@ export function AppShell({ children }: AppShellProps) {
   const editor = useEditorState();
   const actions = useAppActions();
   const [languageMode, setLanguageMode] = useState(
-    () => localStorage.getItem('sprache') ?? 'standard'
+    () => localStorage.getItem('sprache') ?? 'leichte'
   );
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [keybindsOpen, setKeybindsOpen] = useState(false);
