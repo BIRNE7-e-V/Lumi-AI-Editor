@@ -65,6 +65,7 @@ export function ChatPage() {
               defaultWidth={PANEL_WIDTH_DEFAULT}
               storageKey="lumi-editor-panel-width"
               icon={PencilSquareIcon}
+              buttonClassName="bg-secondary text-secondary-content "
               label="Editor"
               onToggle={() => {
                 setShowEditor((value) => !value);
@@ -92,6 +93,7 @@ export function ChatPage() {
               open={showPreview}
               defaultWidth={PREVIEW_WIDTH_DEFAULT}
               storageKey="lumi-preview-panel-width"
+              buttonClassName="bg-primary text-primary-content "
               icon={EyeIcon}
               label="Vorschau"
               onToggle={() => {

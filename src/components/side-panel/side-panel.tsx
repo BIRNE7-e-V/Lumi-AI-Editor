@@ -13,6 +13,7 @@ type SidePanelProps = {
   storageKey: string;
   icon: ComponentType<SVGProps<SVGSVGElement>>;
   label: string;
+  buttonClassName?: string;
   onToggle: () => void;
   children: ReactNode;
 };
@@ -24,6 +25,7 @@ export function SidePanel({
   storageKey,
   icon: Icon,
   label,
+  buttonClassName,
   onToggle,
   children,
 }: SidePanelProps) {
@@ -86,7 +88,8 @@ export function SidePanel({
         aria-label={`${label} ${open ? 'schließen' : 'öffnen'}`}
         className={twMerge(
           'btn btn-lg rounded-box border-base-300 bg-base-100 absolute top-3 z-10 h-auto min-h-0 w-10 flex-col gap-2 border px-2 py-4 shadow-sm',
-          side === 'left' ? 'right-0 translate-x-1/2' : 'left-0 -translate-x-1/2'
+          side === 'left' ? 'right-0 translate-x-1/2' : 'left-0 -translate-x-1/2',
+          buttonClassName
         )}
         type="button"
         onClick={(e) => {
@@ -94,8 +97,8 @@ export function SidePanel({
           onToggle();
         }}
       >
-        <Icon className="size-4" />
-        <span className="rotate-180 text-xs font-medium tracking-[0.2em] [writing-mode:vertical-rl]">
+        <Icon className="size-4 stroke-2" />
+        <span className={twMerge('rotate-180 text-xs font-bold [writing-mode:vertical-rl]')}>
           {label}
         </span>
       </button>
