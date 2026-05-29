@@ -35,6 +35,10 @@ export function ChatPage() {
     actions.chatLanguageModeChanged(languageMode);
   }, [languageMode, actions]);
 
+  useEffect(() => {
+    if (editor.worksheetLlmRevision > 0) setShowPreview(true);
+  }, [editor.worksheetLlmRevision]);
+
   const startGuidedCreation = useCallback(() => {
     if (!canUseAi) {
       openSettings();

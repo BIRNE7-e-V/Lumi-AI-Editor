@@ -54,6 +54,7 @@ function getInitialEditorState(): LumiEditorState {
     title: '',
     content: {},
     structure: [],
+    worksheetLlmRevision: 0,
     ui: {
       loading: {},
     },
@@ -526,7 +527,7 @@ export function AppStateProvider({ children }: { children: React.ReactNode }) {
           content[item.id] = item;
           structure.push(item.id);
         }
-        next = { ...next, content, structure };
+        next = { ...next, content, structure, worksheetLlmRevision: prev.worksheetLlmRevision + 1 };
       }
       return next;
     });

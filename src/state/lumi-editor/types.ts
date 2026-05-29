@@ -61,6 +61,7 @@ export interface LumiEditorState {
   };
   structure: Array<ID>;
   worksheetId?: string | null;
+  worksheetLlmRevision: number;
   ui: {
     loading: {
       [id: string]: boolean;

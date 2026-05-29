@@ -159,9 +159,7 @@ export function SidePanel({
           }}
         >
           <Icon className="size-4" />
-          <span className="rotate-180 text-xs font-medium tracking-[0.2em] [writing-mode:vertical-rl]">
-            {label}
-          </span>
+          <span className="rotate-180 text-xs font-medium [writing-mode:vertical-rl]">{label}</span>
         </button>
       </div>
     </div>
