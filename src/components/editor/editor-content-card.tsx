@@ -56,6 +56,36 @@ const TextareaField = memo(function TextareaField({
   );
 });
 
+const HeadingField = memo(function HeadingField({
+  value,
+  onCommit,
+}: {
+  value: string;
+  onCommit: (value: string) => void;
+}) {
+  const [draft, setDraft] = useState(value);
+  const [prev, setPrev] = useState(value);
+  if (prev !== value) {
+    setPrev(value);
+    setDraft(value);
+  }
+  return (
+    <label className="form-control gap-2">
+      <span className="label-text font-medium">Überschrift</span>
+      <input
+        className="input input-bordered input-lg w-full"
+        placeholder='z. B. "Was ist Google Maps?" oder "Übung: Wissen prüfen"'
+        type="text"
+        value={draft}
+        onBlur={() => {
+          if (draft !== value) onCommit(draft);
+        }}
+        onChange={(e) => setDraft(e.target.value)}
+      />
+    </label>
+  );
+});
+
 const MultipleChoiceEditorCard = memo(function MultipleChoiceEditorCard({
   item,
   onUpdate,
@@ -287,6 +317,13 @@ export const EditorContentCard = memo(function EditorContentCard({
     );
   }
 
+  const headingField = (
+    <HeadingField
+      value={item.heading ?? ''}
+      onCommit={(value) => update({ heading: value || undefined })}
+    />
+  );
+
   return (
     <div className="relative" onDragOver={onDragOver} onDrop={onDrop}>
       {isDropTarget && dropPosition === 'before' ? (
@@ -346,7 +383,10 @@ export const EditorContentCard = memo(function EditorContentCard({
           </div>
         </div>
 
-        {body}
+        <div className="space-y-4">
+          {headingField}
+          {body}
+        </div>
 
         <div className="border-base-300 mt-4 flex flex-wrap items-center gap-2 border-t pt-3">
           <ContentTypeMenu

@@ -140,9 +140,10 @@ function extractWorksheetBlock(raw: string): {
       payload: JSON.parse(raw.slice(jsonStart, jsonEnd + 1)) as {
         title?: string;
         content?: Array<
-          | { type: 'text'; text: string }
+          | { type: 'text'; heading?: string; text: string }
           | {
               type: 'multiple-choice';
+              heading?: string;
               question: string;
               answers: { text: string; correct: boolean }[];
             }
@@ -157,9 +158,10 @@ function extractWorksheetBlock(raw: string): {
 type WorksheetUpdatePayload = {
   title?: string;
   content?: Array<
-    | { type: 'text'; text: string }
+    | { type: 'text'; heading?: string; text: string }
     | {
         type: 'multiple-choice';
+        heading?: string;
         question: string;
         answers: { text: string; correct: boolean }[];
       }
@@ -519,11 +521,12 @@ export function AppStateProvider({ children }: { children: React.ReactNode }) {
       if (update.content !== undefined) {
         const content: LumiEditorState['content'] = {};
         const structure: ID[] = [];
-        for (const item of update.content.map((i) =>
-          i.type === 'text'
+        for (const item of update.content.map((i) => {
+          const base = i.type === 'text'
             ? createTextContent(i.text)
-            : createMultipleChoiceContent(i.question, i.answers)
-        )) {
+            : createMultipleChoiceContent(i.question, i.answers);
+          return i.heading ? { ...base, heading: i.heading } : base;
+        })) {
           content[item.id] = item;
           structure.push(item.id);
         }

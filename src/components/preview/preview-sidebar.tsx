@@ -27,10 +27,29 @@ const EmptyPreview = memo(function EmptyPreview() {
   );
 });
 
+function SectionHeading({ heading }: { heading?: string }) {
+  if (!heading) return null;
+  return <h2 className="text-base-content font-[Barlow] text-base font-bold">{heading}</h2>;
+}
+
+function ExerciseHeader({ heading, label }: { heading?: string; label: string }) {
+  return (
+    <div className="border-b border-accent/20 pb-2 mb-1 space-y-1">
+      {heading ? (
+        <h2 className="text-base-content font-[Barlow] text-base font-bold">{heading}</h2>
+      ) : null}
+      <span className="badge badge-accent text-xs font-semibold uppercase tracking-wide">
+        Übung · {label}
+      </span>
+    </div>
+  );
+}
+
 const PreviewItem = memo(function PreviewItem({ item }: { item: Content }) {
   if (item.type === 'text') {
     return (
-      <section className="rounded-box border-base-300 bg-base-100 border p-4">
+      <section className="rounded-box border-base-300 bg-base-100 space-y-2 border p-4">
+        <SectionHeading heading={item.heading} />
         <p className="text-base-content/80 leading-7 whitespace-pre-wrap">
           {item.text || '(Kein Text)'}
         </p>
@@ -40,12 +59,13 @@ const PreviewItem = memo(function PreviewItem({ item }: { item: Content }) {
 
   if (item.type === 'multiple-choice') {
     return (
-      <section className="rounded-box border-base-300 bg-base-100 space-y-3 border p-4">
+      <section className="rounded-box border-accent/30 bg-accent/5 space-y-3 border p-4">
+        <ExerciseHeader heading={item.heading} label="Multiple Choice" />
         <p className="font-semibold">{item.question || '(Keine Frage)'}</p>
         <div className="space-y-2">
           {item.answers.map((answer, index) => (
             <label key={`${item.id}-preview-${index}`} className="flex items-center gap-3 text-sm">
-              <input className="checkbox checkbox-sm" type="checkbox" readOnly />
+              <input className="checkbox checkbox-sm checkbox-accent" type="checkbox" readOnly />
               <span>{answer.text || `Antwort ${index + 1}`}</span>
             </label>
           ))}
@@ -56,8 +76,8 @@ const PreviewItem = memo(function PreviewItem({ item }: { item: Content }) {
 
   if (item.type === 'fill-in-the-blanks') {
     return (
-      <section className="rounded-box border-base-300 bg-base-100 space-y-3 border p-4">
-        <div className="badge badge-accent badge-outline">Lückentext</div>
+      <section className="rounded-box border-accent/30 bg-accent/5 space-y-3 border p-4">
+        <ExerciseHeader heading={item.heading} label="Lückentext" />
         <p className="text-base-content/80 leading-7 whitespace-pre-wrap">
           {item.text || '(Lückentext folgt)'}
         </p>
@@ -66,8 +86,8 @@ const PreviewItem = memo(function PreviewItem({ item }: { item: Content }) {
   }
 
   return (
-    <section className="rounded-box border-base-300 bg-base-100 space-y-4 border p-4">
-      <div className="badge badge-info badge-outline">Freitext</div>
+    <section className="rounded-box border-accent/30 bg-accent/5 space-y-4 border p-4">
+      <ExerciseHeader heading={item.heading} label="Freitext" />
       <p className="text-base-content/80 leading-7">{item.task || '(Freitextaufgabe folgt)'}</p>
       <div className="space-y-2 pt-2">
         {Array.from({ length: 4 }).map((_, index) => (

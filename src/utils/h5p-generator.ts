@@ -6,15 +6,16 @@ function uuid(): string {
   return crypto.randomUUID();
 }
 
-function makeAdvancedTextItem(text: string) {
+function makeAdvancedTextItem(text: string, heading?: string) {
+  const html = heading ? `<h2>${heading}</h2><p>${text}</p>` : `<p>${text}</p>`;
   return {
     content: {
-      params: { text: `<p>${text}</p>` },
+      params: { text: html },
       library: 'H5P.AdvancedText 1.1',
       metadata: {
         contentType: 'Text',
         license: 'U',
-        title: text.slice(0, 40) || 'Text',
+        title: (heading || text).slice(0, 40) || 'Text',
         authors: [],
         changes: [],
       },
@@ -22,6 +23,10 @@ function makeAdvancedTextItem(text: string) {
     },
     useSeparator: 'auto',
   };
+}
+
+function makeHeadingItem(heading: string) {
+  return makeAdvancedTextItem('', heading);
 }
 
 function makeMultiChoiceItem(item: MultipleChoiceContent) {
@@ -102,13 +107,16 @@ function makeMultiChoiceItem(item: MultipleChoiceContent) {
 function contentItemToH5P(item: Content) {
   switch (item.type) {
     case 'text':
-      return makeAdvancedTextItem(item.text);
+      return [makeAdvancedTextItem(item.text, item.heading)];
     case 'multiple-choice':
-      return makeMultiChoiceItem(item);
+      return [
+        ...(item.heading ? [makeHeadingItem(item.heading)] : []),
+        makeMultiChoiceItem(item),
+      ];
     case 'fill-in-the-blanks':
-      return makeAdvancedTextItem(item.text);
+      return [makeAdvancedTextItem(item.text, item.heading)];
     case 'freetext':
-      return makeAdvancedTextItem(item.task);
+      return [makeAdvancedTextItem(item.task, item.heading)];
   }
 }
 
@@ -121,7 +129,7 @@ function buildContentJson(title: string, content: Content[]) {
     chapters: [
       {
         params: {
-          content: content.map(contentItemToH5P),
+          content: content.flatMap(contentItemToH5P),
         },
         library: 'H5P.Column 1.18',
         subContentId: uuid(),

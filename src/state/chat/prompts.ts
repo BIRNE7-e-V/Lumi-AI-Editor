@@ -40,8 +40,8 @@ Format (eine Zeile, kein Zeilenumbruch innerhalb des Blocks):
 
 Pflichtfelder: "title" (string) und "content" (array).
 Erlaubte content-Typen:
-  {"type": "text", "text": "..."}
-  {"type": "multiple-choice", "question": "...", "answers": [{"text": "...", "correct": true}, {"text": "...", "correct": false}]}
+  {"type": "text", "heading": "...", "text": "..."}
+  {"type": "multiple-choice", "heading": "...", "question": "...", "answers": [{"text": "...", "correct": true}, {"text": "...", "correct": false}]}
 
 Regeln:
 - Sende IMMER den vollständigen aktuellen Zustand: alle vorhandenen Titel + alle Inhalte.
@@ -49,9 +49,12 @@ Regeln:
 - Kein Markdown und keine Prosa innerhalb des Blocks.
 - Keine erfundenen Felder außerhalb der erlaubten Typen.
 - Der Block ist für den Nutzer unsichtbar.
+- Jeder content-Block MUSS ein "heading"-Feld haben: eine kurze Überschrift (3–6 Wörter), die den Abschnitt beschreibt.
+  - Für Textblöcke: beschreibt das Thema des Abschnitts (z. B. "Was ist Google Maps?" oder "Begrüßung & Einleitung").
+  - Für Multiple-Choice-Blöcke: beginnt mit "Übung:" (z. B. "Übung: Wissen prüfen" oder "Übung: Richtiges erkennen").
 
 Beispiel mit Inhalt:
-[WORKSHEET_UPDATE: {"title": "Geometrie Grundlagen", "content": [{"type": "text", "text": "Ein Dreieck hat drei Seiten."}, {"type": "multiple-choice", "question": "Wie viele Seiten hat ein Dreieck?", "answers": [{"text": "3", "correct": true}, {"text": "4", "correct": false}]}]}]
+[WORKSHEET_UPDATE: {"title": "Geometrie Grundlagen", "content": [{"type": "text", "heading": "Was ist ein Dreieck?", "text": "Ein Dreieck hat drei Seiten."}, {"type": "multiple-choice", "heading": "Übung: Seiten zählen", "question": "Wie viele Seiten hat ein Dreieck?", "answers": [{"text": "3", "correct": true}, {"text": "4", "correct": false}]}]}]
 </structured_output_contract>
 
 <verification_loop>

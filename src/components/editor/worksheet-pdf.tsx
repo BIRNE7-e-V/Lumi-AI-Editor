@@ -16,6 +16,12 @@ const styles = StyleSheet.create({
     marginBottom: 12,
     color: '#111827',
   },
+  sectionHeading: {
+    fontSize: 14,
+    fontFamily: 'Helvetica-Bold',
+    color: '#111827',
+    marginBottom: 6,
+  },
   divider: {
     borderBottomWidth: 1,
     borderBottomColor: '#e5e7eb',
@@ -73,17 +79,24 @@ const styles = StyleSheet.create({
   },
 });
 
-function TextItem({ text }: { text: string }) {
+function SectionHeading({ heading }: { heading?: string }) {
+  if (!heading) return null;
+  return <Text style={styles.sectionHeading}>{heading}</Text>;
+}
+
+function TextItem({ heading, text }: { heading?: string; text: string }) {
   return (
     <View style={styles.section}>
+      <SectionHeading heading={heading} />
       <Text style={styles.bodyText}>{text || '(Kein Text)'}</Text>
     </View>
   );
 }
 
-function MCQItem({ question, answers }: { question: string; answers: { text: string }[] }) {
+function MCQItem({ heading, question, answers }: { heading?: string; question: string; answers: { text: string }[] }) {
   return (
     <View style={styles.section}>
+      <SectionHeading heading={heading} />
       <Text style={styles.question}>{question || '(Keine Frage)'}</Text>
       {answers.map((answer, index) => (
         <View key={index} style={styles.answerRow}>
@@ -95,18 +108,20 @@ function MCQItem({ question, answers }: { question: string; answers: { text: str
   );
 }
 
-function FillInTheBlanksItem({ text }: { text: string }) {
+function FillInTheBlanksItem({ heading, text }: { heading?: string; text: string }) {
   return (
     <View style={styles.section}>
+      <SectionHeading heading={heading} />
       <Text style={styles.badge}>Lückentext</Text>
       <Text style={styles.bodyText}>{text || '(Lückentext folgt)'}</Text>
     </View>
   );
 }
 
-function FreetextItem({ task }: { task: string }) {
+function FreetextItem({ heading, task }: { heading?: string; task: string }) {
   return (
     <View style={styles.section}>
+      <SectionHeading heading={heading} />
       <Text style={styles.badge}>Freitext</Text>
       <Text style={styles.bodyText}>{task || '(Freitextaufgabe folgt)'}</Text>
       {Array.from({ length: 5 }).map((_, index) => (
@@ -119,13 +134,13 @@ function FreetextItem({ task }: { task: string }) {
 function ContentSection({ item, isLast }: { item: Content; isLast: boolean }) {
   const rendered: ReactNode =
     item.type === 'text' ? (
-      <TextItem text={item.text} />
+      <TextItem heading={item.heading} text={item.text} />
     ) : item.type === 'multiple-choice' ? (
-      <MCQItem answers={item.answers} question={item.question} />
+      <MCQItem answers={item.answers} heading={item.heading} question={item.question} />
     ) : item.type === 'fill-in-the-blanks' ? (
-      <FillInTheBlanksItem text={item.text} />
+      <FillInTheBlanksItem heading={item.heading} text={item.text} />
     ) : (
-      <FreetextItem task={item.task} />
+      <FreetextItem heading={item.heading} task={item.task} />
     );
 
   return (

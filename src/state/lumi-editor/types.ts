@@ -20,12 +20,14 @@ export interface ProviderConfig {
 
 export interface TextContent {
   id: ID;
+  heading?: string;
   text: string;
   type: 'text';
 }
 
 export interface MultipleChoiceContent {
   id: ID;
+  heading?: string;
   question: string;
   answers: { correct: boolean; text: string }[];
   type: 'multiple-choice';
@@ -33,12 +35,14 @@ export interface MultipleChoiceContent {
 
 export interface FillInTheBlanks {
   id: ID;
+  heading?: string;
   text: string;
   type: 'fill-in-the-blanks';
 }
 
 export interface Freetext {
   id: ID;
+  heading?: string;
   task: string;
   type: 'freetext';
 }
