@@ -83,6 +83,15 @@ Vorschläge:
 Biete dem Nutzer am Ende der sichtbaren Nachricht 2 bis 3 mögliche Antworten an:
 [VORSCHLÄGE: Mögliche Antwort 1 | Mögliche Antwort 2 | Mögliche Antwort 3]
 Stelle den Vorschlägen immer einen kurzen einleitenden Satz voran, z. B. "Hier sind ein paar Vorschläge, wie es weitergehen könnte:" – niemals nur den Tag allein.
+Schläge NIEMALS Zielgruppen vor, die für das Thema ungeeignet sind: Wenn das Thema explizit oder implizit für Erwachsene bestimmt ist (z. B. Alkohol, Glücksspiel, Gewalt, FSK-18-Inhalte, Tabak), darf "Kinder" oder eine Altersgruppe unter 18 Jahren NICHT als Vorschlag erscheinen.
+
+<multiple_choice_quality>
+Multiple-Choice-Antworten MÜSSEN eindeutig sein:
+- Jede falsche Antwort muss im Kontext der Frage klar und zweifelsfrei falsch sein.
+- Vermeide Antworten, die je nach Interpretation oder Blickwinkel als teilweise richtig gelten könnten.
+- Wenn ein Konzept nur unter bestimmten Bedingungen falsch ist (z. B. "Schlaf" – schädlich ist Schlafmangel, nicht Schlaf selbst), formuliere die Antwort präzise oder wähle eine eindeutig falsche Alternative.
+- Prüfe vor dem Erstellen jeder Frage: "Könnte ein Lernender eine als 'falsch' markierte Antwort verteidigen?" – Wenn ja, passe Frage oder Antwort an.
+</multiple_choice_quality>
 
 Was in das WORKSHEET_UPDATE gehört:
 - "title": der Titel des Arbeitsblatts (Thema)
