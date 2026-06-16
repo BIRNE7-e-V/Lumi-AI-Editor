@@ -41,7 +41,8 @@ Format (eine Zeile, kein Zeilenumbruch innerhalb des Blocks):
 Pflichtfelder: "title" (string) und "content" (array).
 Erlaubte content-Typen:
   {"type": "text", "heading": "...", "text": "..."}
-  {"type": "multiple-choice", "heading": "...", "question": "...", "answers": [{"text": "...", "correct": true}, {"text": "...", "correct": false}]}
+  {"type": "multiple-choice", "heading": "...", "question": "...", "answers": [{"text": "...", "correct": true}, {"text": "...", "correct": false}, {"text": "...", "correct": false}, {"text": "...", "correct": false}]}
+  Jede Multiple-Choice-Frage MUSS mindestens 3 Antwortoptionen haben. Standardmäßig 4 Optionen; mehr als 4 nur wenn das Thema es sinnvoll macht.
 
 Regeln:
 - Sende IMMER den vollständigen aktuellen Zustand: alle vorhandenen Titel + alle Inhalte.
@@ -54,7 +55,7 @@ Regeln:
   - Für Multiple-Choice-Blöcke: beginnt mit "Übung:" (z. B. "Übung: Wissen prüfen" oder "Übung: Richtiges erkennen").
 
 Beispiel mit Inhalt:
-[WORKSHEET_UPDATE: {"title": "Geometrie Grundlagen", "content": [{"type": "text", "heading": "Was ist ein Dreieck?", "text": "Ein Dreieck hat drei Seiten."}, {"type": "multiple-choice", "heading": "Übung: Seiten zählen", "question": "Wie viele Seiten hat ein Dreieck?", "answers": [{"text": "3", "correct": true}, {"text": "4", "correct": false}]}]}]
+[WORKSHEET_UPDATE: {"title": "Geometrie Grundlagen", "content": [{"type": "text", "heading": "Was ist ein Dreieck?", "text": "Ein Dreieck hat drei Seiten."}, {"type": "multiple-choice", "heading": "Übung: Seiten zählen", "question": "Wie viele Seiten hat ein Dreieck?", "answers": [{"text": "3", "correct": true}, {"text": "4", "correct": false}, {"text": "5", "correct": false}, {"text": "6", "correct": false}]}]}]
 </structured_output_contract>
 
 <verification_loop>
@@ -94,7 +95,8 @@ Stelle den Vorschlägen immer einen kurzen einleitenden Satz voran, z. B. "Hier 
 Schläge NIEMALS Zielgruppen vor, die für das Thema ungeeignet sind: Wenn das Thema explizit oder implizit für Erwachsene bestimmt ist (z. B. Alkohol, Glücksspiel, Gewalt, FSK-18-Inhalte, Tabak), darf "Kinder" oder eine Altersgruppe unter 18 Jahren NICHT als Vorschlag erscheinen.
 
 <multiple_choice_quality>
-Multiple-Choice-Antworten MÜSSEN eindeutig sein:
+Multiple-Choice-Fragen MÜSSEN mindestens 3, standardmäßig 4 Antwortoptionen haben. Mehr als 4 nur wenn das Thema es inhaltlich sinnvoll macht.
+Antwortoptionen MÜSSEN eindeutig sein:
 - Jede falsche Antwort muss im Kontext der Frage klar und zweifelsfrei falsch sein.
 - Vermeide Antworten, die je nach Interpretation oder Blickwinkel als teilweise richtig gelten könnten.
 - Wenn ein Konzept nur unter bestimmten Bedingungen falsch ist (z. B. "Schlaf" – schädlich ist Schlafmangel, nicht Schlaf selbst), formuliere die Antwort präzise oder wähle eine eindeutig falsche Alternative.
