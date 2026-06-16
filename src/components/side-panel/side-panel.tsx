@@ -1,8 +1,8 @@
-import { type ComponentType, type ReactNode, type SVGProps, useCallback, useState } from 'react';
+import { type ReactNode, useCallback, useState } from 'react';
 
 import { twMerge } from 'tailwind-merge';
 
-export const SIDE_PANEL_TOGGLE_WIDTH = 40;
+export const SIDE_PANEL_TOGGLE_WIDTH = 48;
 const SIDE_PANEL_MIN_WIDTH = 200;
 const SIDE_PANEL_MAX_WIDTH = 700;
 
@@ -11,9 +11,7 @@ type SidePanelProps = {
   open: boolean;
   defaultWidth: number;
   storageKey: string;
-  icon: ComponentType<SVGProps<SVGSVGElement>>;
-  label: string;
-  buttonClassName?: string;
+  button: ReactNode;
   onToggle: () => void;
   children: ReactNode;
 };
@@ -23,9 +21,7 @@ export function SidePanel({
   open,
   defaultWidth,
   storageKey,
-  icon: Icon,
-  label,
-  buttonClassName,
+  button,
   onToggle,
   children,
 }: SidePanelProps) {
@@ -83,27 +79,17 @@ export function SidePanel({
         transition: isResizing ? 'none' : 'width 300ms ease-out',
       }}
     >
-      {/* Outlined button — behind the sliding panel, tracks the outer wrapper edge */}
-      <button
-        aria-label={`${label} ${open ? 'schließen' : 'öffnen'}`}
+      {/* Toggle button — sits at the outer edge, always on top */}
+      <div
         className={twMerge(
-          'btn btn-lg rounded-box border-base-300 bg-base-100 absolute top-3 z-10 h-auto min-h-0 w-10 flex-col gap-2 border px-2 py-4 shadow-sm',
-          side === 'left' ? 'right-0 translate-x-1/2' : 'left-0 -translate-x-1/2',
-          buttonClassName
+          'absolute top-3 z-10',
+          side === 'left' ? 'right-0 translate-x-1/2' : 'left-0 -translate-x-1/2'
         )}
-        type="button"
-        onClick={(e) => {
-          e.stopPropagation();
-          onToggle();
-        }}
       >
-        <Icon className="size-4 stroke-2" />
-        <span className={twMerge('rotate-180 text-xs font-bold [writing-mode:vertical-rl]')}>
-          {label}
-        </span>
-      </button>
+        {button}
+      </div>
 
-      {/* Sliding panel — above the outlined button */}
+      {/* Sliding panel */}
       <div
         className="absolute inset-y-0 h-full min-h-0 overflow-visible bg-transparent"
         style={{
@@ -119,7 +105,6 @@ export function SidePanel({
         }}
         onClick={!open ? onToggle : undefined}
       >
-        {/* Content */}
         <div className="bg-base-100 absolute inset-0 overflow-hidden shadow-sm">
           <div className={twMerge('h-full min-h-0', !open && 'pointer-events-none')}>
             {children}
@@ -144,23 +129,6 @@ export function SidePanel({
             </div>
           ) : null}
         </div>
-
-        {/* Borderless cap button — same position as outlined button, covers it seamlessly */}
-        <button
-          aria-label={`${label} ${open ? 'schließen' : 'öffnen'}`}
-          className={twMerge(
-            'btn btn-lg rounded-box bg-base-100 absolute top-3 h-auto min-h-0 w-10 flex-col gap-2 border-transparent px-2 py-4 shadow-none',
-            side === 'left' ? 'right-0 translate-x-1/2' : 'left-0 -translate-x-1/2'
-          )}
-          type="button"
-          onClick={(e) => {
-            e.stopPropagation();
-            onToggle();
-          }}
-        >
-          <Icon className="size-4" />
-          <span className="rotate-180 text-xs font-medium [writing-mode:vertical-rl]">{label}</span>
-        </button>
       </div>
     </div>
   );

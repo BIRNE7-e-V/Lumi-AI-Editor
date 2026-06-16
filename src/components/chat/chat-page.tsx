@@ -68,12 +68,28 @@ export function ChatPage() {
               open={showEditor}
               defaultWidth={PANEL_WIDTH_DEFAULT}
               storageKey="lumi-editor-panel-width"
-              icon={PencilSquareIcon}
-              buttonClassName="bg-secondary text-secondary-content "
-              label="Editor"
-              onToggle={() => {
-                setShowEditor((value) => !value);
-              }}
+              onToggle={() => setShowEditor((v) => !v)}
+              button={
+                <div className="tooltip tooltip-right">
+                  <div className="tooltip-content bg-secondary text-secondary-content rounded p-2 text-lg font-bold">
+                    <div className="">
+                      Editor: Hier passt du dein Arbeitsblatt an. Dann als Kurs herunterladen
+                    </div>
+                  </div>
+
+                  <button
+                    aria-label={`Editor ${showEditor ? 'schließen' : 'öffnen'}`}
+                    className="btn btn-lg rounded-box border-base-300 bg-secondary text-secondary-content h-auto min-h-0 w-12 flex-col gap-2 border px-2 py-5 shadow-sm"
+                    type="button"
+                    onClick={() => setShowEditor((v) => !v)}
+                  >
+                    <PencilSquareIcon className="size-5 stroke-2" />
+                    <span className="rotate-180 text-xs font-bold [writing-mode:vertical-rl]">
+                      Editor
+                    </span>
+                  </button>
+                </div>
+              }
             >
               <EditorSidebar
                 canUseAi={canUseAi}
@@ -97,12 +113,26 @@ export function ChatPage() {
               open={showPreview}
               defaultWidth={PREVIEW_WIDTH_DEFAULT}
               storageKey="lumi-preview-panel-width"
-              buttonClassName="bg-primary text-primary-content "
-              icon={EyeIcon}
-              label="Vorschau"
-              onToggle={() => {
-                setShowPreview((value) => !value);
-              }}
+              onToggle={() => setShowPreview((v) => !v)}
+              button={
+                <div className="tooltip tooltip-left">
+                  <div className="tooltip-content bg-primary text-primary-content rounded p-2 text-lg font-bold">
+                    Vorschau: Hier siehst du, was du schon alles auf deinem Arbeitsblatt stehen
+                    hast.
+                  </div>
+                  <button
+                    aria-label={`Vorschau ${showPreview ? 'schließen' : 'öffnen'}`}
+                    className="btn btn-lg rounded-box border-base-300 bg-primary text-primary-content h-auto min-h-0 w-12 flex-col gap-2 border px-2 py-5 shadow-sm"
+                    type="button"
+                    onClick={() => setShowPreview((v) => !v)}
+                  >
+                    <EyeIcon className="size-5 stroke-2" />
+                    <span className="rotate-180 text-xs font-bold [writing-mode:vertical-rl]">
+                      Vorschau
+                    </span>
+                  </button>
+                </div>
+              }
             >
               <PreviewSidebar />
             </SidePanel>
