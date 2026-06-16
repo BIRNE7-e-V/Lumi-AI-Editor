@@ -229,7 +229,7 @@ function normalizeBlock(
     typeof block.question === 'string' &&
     Array.isArray(block.answers)
   ) {
-    const answers = parseAnswers(block.answers);
+    const answers = parseAnswers(block.answers).sort(() => Math.random() - 0.5);
     if (answers.length > 0) {
       return {
         item: { type: 'multiple-choice', question: block.question, answers },
