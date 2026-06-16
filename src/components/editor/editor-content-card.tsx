@@ -1,4 +1,5 @@
 import {
+  ArrowUpIcon,
   Bars3Icon,
   DocumentDuplicateIcon,
   PlusIcon,
@@ -197,7 +198,7 @@ function ContentTypeMenu({
                 onSelect(option.type);
               }}
             >
-              <option.icon className="size-4" />
+              <option.icon className="size-5" />
               {option.label}
             </button>
           </li>
@@ -208,7 +209,7 @@ function ContentTypeMenu({
         {onAiText ? (
           <li>
             <button disabled={!canUseAi} type="button" onClick={onAiText}>
-              <SparklesIcon className="size-4" />
+              <SparklesIcon className="size-5" />
               Text mit KI
             </button>
           </li>
@@ -216,7 +217,7 @@ function ContentTypeMenu({
         {onAiQuestion ? (
           <li>
             <button disabled={!canUseAi} type="button" onClick={onAiQuestion}>
-              <SparklesIcon className="size-4" />
+              <SparklesIcon className="size-5" />
               Frage mit KI
             </button>
           </li>
@@ -343,52 +344,75 @@ export const EditorContentCard = memo(function EditorContentCard({
         onFocus={onActivate}
       >
         <div className="mb-4 flex items-start justify-between gap-3">
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-4">
             <div
               className={twMerge(
-                'badge badge-outline badge-xl text-xs',
+                'badge badge-outline badge-xl text-sm',
                 contentTypeBadgeClass(item.type)
               )}
             >
               {contentTypeLabel(item.type)}
             </div>
-            <span className="text-base-content/40 text-xs tabular-nums">
+            <span className="text-base-content/40 text-sm tabular-nums">
               {index + 1} / {total}
             </span>
-            <button
-              className="btn btn-ghost btn-sm cursor-grab"
-              draggable
-              type="button"
-              onDragEnd={onDragEnd}
-              onDragStart={onDragStart}
-            >
-              <Bars3Icon className="size-4" />
-            </button>
+            <div className="tooltip tooltip-bottom" data-tip="Verschieben">
+              <button
+                aria-label="Element verschieben"
+                className="btn btn-ghost btn-sm cursor-grab"
+                draggable
+                type="button"
+                onDragEnd={onDragEnd}
+                onDragStart={onDragStart}
+              >
+                <Bars3Icon className="size-6" />
+              </button>
+            </div>
           </div>
 
           <div className="flex items-center gap-1">
-            <button
-              className="btn btn-ghost btn-sm"
-              disabled={index === 0}
-              type="button"
-              onClick={() => move(-1)}
-            >
-              ↑
-            </button>
-            <button
-              className="btn btn-ghost btn-sm"
-              disabled={index === total - 1}
-              type="button"
-              onClick={() => move(1)}
-            >
-              ↓
-            </button>
-            <button className="btn btn-ghost btn-sm" type="button" onClick={duplicate}>
-              <DocumentDuplicateIcon className="size-4" />
-            </button>
-            <button className="btn btn-ghost btn-sm text-error" type="button" onClick={remove}>
-              <TrashIcon className="size-4" />
-            </button>
+            <div className="tooltip tooltip-bottom" data-tip="Nach oben verschieben">
+              <button
+                aria-label="Nach oben verschieben"
+                className="btn btn-ghost"
+                disabled={index === 0}
+                type="button"
+                onClick={() => move(-1)}
+              >
+                <ArrowUpIcon className="size-6" />
+              </button>
+            </div>
+            <div className="tooltip tooltip-bottom" data-tip="Nach unten verschieben">
+              <button
+                aria-label="Nach unten verschieben"
+                className="btn btn-ghost btn-sm"
+                disabled={index === total - 1}
+                type="button"
+                onClick={() => move(1)}
+              >
+                <ArrowUpIcon className="size-6 rotate-180" />
+              </button>
+            </div>
+            <div className="tooltip tooltip-bottom" data-tip="Duplizieren">
+              <button
+                aria-label="Element duplizieren"
+                className="btn btn-ghost btn-sm"
+                type="button"
+                onClick={duplicate}
+              >
+                <DocumentDuplicateIcon className="size-6" />
+              </button>
+            </div>
+            <div className="tooltip tooltip-bottom" data-tip="Löschen">
+              <button
+                aria-label="Element löschen"
+                className="btn btn-ghost btn-sm text-error"
+                type="button"
+                onClick={remove}
+              >
+                <TrashIcon className="size-6" />
+              </button>
+            </div>
           </div>
         </div>
 
@@ -400,15 +424,15 @@ export const EditorContentCard = memo(function EditorContentCard({
         <div className="border-base-300 mt-4 flex flex-wrap items-center gap-2 border-t pt-3">
           <ContentTypeMenu
             canUseAi={canUseAi}
-            summaryIcon={<PlusIcon className="size-4" />}
-            summaryLabel="Darunter"
+            summaryIcon={<PlusIcon className="size-5" />}
+            summaryLabel="Element hinzufügen"
             onAiQuestion={() => onAiAddBelow('multiple-choice')}
             onAiText={() => onAiAddBelow('text')}
             onSelect={onAddBelow}
           />
           <ContentTypeMenu
             canUseAi={canUseAi}
-            summaryLabel="Umwandeln"
+            summaryLabel="Umwandeln in"
             onAiQuestion={() => onAiTransform('multiple-choice')}
             onAiText={() => onAiTransform('text')}
             onSelect={onTransform}
