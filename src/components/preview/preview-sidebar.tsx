@@ -21,7 +21,7 @@ function getDownloadFilename(title: string) {
 const EmptyPreview = memo(function EmptyPreview() {
   return (
     <div className="rounded-box bg-base-200/80 text-base-content/70 flex h-full items-center justify-center p-6 text-center text-sm leading-6">
-      Noch kein Inhalt vorhanden. Nutze den Editor oder den KI-Assistenten, um das Arbeitsblatt
+      Noch kein Inhalt vorhanden. Nutze den Bearbeitungs-Modus oder den KI-Assistenten, um das Arbeitsblatt
       aufzubauen.
     </div>
   );

@@ -73,19 +73,19 @@ export function ChatPage() {
                 <div className="tooltip tooltip-right">
                   <div className="tooltip-content bg-secondary text-secondary-content rounded p-2 text-lg font-bold">
                     <div className="">
-                      Editor: Hier passt du dein Arbeitsblatt an. Dann als Kurs herunterladen
+                      Bearbeitungs-Modus: Hier passt du dein Arbeitsblatt an. Dann als Kurs herunterladen
                     </div>
                   </div>
 
                   <button
-                    aria-label={`Editor ${showEditor ? 'schließen' : 'öffnen'}`}
+                    aria-label={`Bearbeitungs-Modus ${showEditor ? 'schließen' : 'öffnen'}`}
                     className="btn btn-lg rounded-box border-base-300 bg-secondary text-secondary-content h-auto min-h-0 w-12 flex-col gap-2 border px-2 py-5 shadow-sm"
                     type="button"
                     onClick={() => setShowEditor((v) => !v)}
                   >
                     <PencilSquareIcon className="size-5 stroke-2" />
                     <span className="rotate-180 text-xs font-bold [writing-mode:vertical-rl]">
-                      Editor
+                      Bearbeitungs-Modus
                     </span>
                   </button>
                 </div>

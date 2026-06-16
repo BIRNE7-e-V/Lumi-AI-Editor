@@ -360,7 +360,7 @@ export const EditorSidebar = memo(function EditorSidebar({
             <PencilSquareIcon className="size-5" />
           </div>
           <div>
-            <h2 className="font-semibold">Editor</h2>
+            <h2 className="font-semibold">Bearbeitungs-Modus</h2>
             <p className="text-base-content/60 text-xs">Titel, Inhalte und Struktur des Blatts.</p>
           </div>
         </div>
