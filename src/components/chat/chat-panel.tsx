@@ -313,10 +313,20 @@ export function ChatPanel({
   const languageModeRef = useRef(chat.languageMode);
   languageModeRef.current = chat.languageMode;
   const endRef = useRef<HTMLDivElement>(null);
-  const inputRef = useRef<HTMLInputElement>(null);
+  const inputRef = useRef<HTMLTextAreaElement>(null);
   const rootRef = useRef<HTMLElement>(null);
   const lastReadMessageRef = useRef<string | null>(null);
   const pendingAudioUrlRef = useRef<string | undefined>(undefined);
+
+  useEffect(() => {
+    const el = inputRef.current;
+    if (!el) return;
+    const style = getComputedStyle(el);
+    const paddingY = parseFloat(style.paddingTop) + parseFloat(style.paddingBottom);
+    const lineHeight = parseFloat(style.lineHeight) || parseFloat(style.fontSize) * 1.5;
+    el.style.height = '1px';
+    el.style.height = `${Math.min(el.scrollHeight, lineHeight * 6 + paddingY)}px`;
+  }, [chatInput]);
 
   const startGuidedCreation = useCallback(() => {
     if (!canUseAi) {
@@ -768,10 +778,11 @@ export function ChatPanel({
             </button>
             <label className="form-control flex-1">
               <span className="sr-only">Nachricht</span>
-              <input
+              <textarea
                 ref={inputRef}
                 data-chat-input="true"
-                className="input input-bordered input-lg w-full"
+                className="textarea textarea-bordered textarea-lg w-full min-h-0 resize-none overflow-y-auto"
+                rows={1}
                 placeholder={
                   creationState.step === 'asking_topic'
                     ? content.topicPlaceholder
