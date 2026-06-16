@@ -733,7 +733,7 @@ Behalte das [WORKSHEET_UPDATE]-Format aus dem structured_output_contract exakt b
           const assistantContent = resolveAssistantContent(
             raw,
             applyWorksheetUpdate,
-            `Ich habe einen ersten Entwurf erstellt.\n\n[VORSCHLÄGE: Füge Quizfragen hinzu | Vereinfache den Text | Ergänze eine Zusammenfassung]`
+            `Ich habe einen ersten Entwurf erstellt. Was soll als Nächstes vertieft oder ergänzt werden?\n\n[VORSCHLÄGE: Füge Übungsaufgaben hinzu | Erkläre einen Abschnitt tiefer | Ergänze Alltagsbeispiele]`
           );
 
           return {
