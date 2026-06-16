@@ -786,7 +786,13 @@ Behalte das [WORKSHEET_UPDATE]-Format aus dem structured_output_contract exakt b
           messages: [...prev.messages, message],
         })),
       chatMessagesSet: (messages) => setChatState((prev) => ({ ...prev, messages })),
-      chatCleared: () => setChatState((prev) => ({ ...prev, messages: [] })),
+      chatCleared: () => {
+        setChatState(getInitialChatState);
+        setEditorState((prev) => ({
+          ...getInitialEditorState(),
+          apiConfig: prev.apiConfig,
+        }));
+      },
       chatPreviewUpdated: (markdown, doc) =>
         setChatState((prev) => ({
           ...prev,

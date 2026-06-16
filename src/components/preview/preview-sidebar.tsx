@@ -141,8 +141,13 @@ export const PreviewSidebar = memo(function PreviewSidebar() {
 
     try {
       const { pdf, WorksheetPDF } = await loadPdfModules();
+      const date = new Intl.DateTimeFormat('de-DE', {
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric',
+      }).format(new Date());
       const blob = await pdf(
-        <WorksheetPDF content={orderedContent} title={editor.title} />
+        <WorksheetPDF content={orderedContent} date={date} title={editor.title} />
       ).toBlob();
       const url = URL.createObjectURL(blob);
       const link = document.createElement('a');

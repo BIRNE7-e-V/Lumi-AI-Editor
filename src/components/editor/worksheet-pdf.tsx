@@ -3,23 +3,72 @@ import type { ReactNode } from 'react';
 
 import type { Content } from '@state/lumi-editor/types';
 
+const BRAND_BLUE = '#1e3a6e';
+
 const styles = StyleSheet.create({
   page: {
-    paddingVertical: 48,
+    paddingTop: 110,
+    paddingBottom: 44,
     paddingHorizontal: 56,
     fontFamily: 'Helvetica',
     backgroundColor: '#ffffff',
   },
+  header: {
+    position: 'absolute',
+    top: 24,
+    left: 56,
+    right: 56,
+  },
+  headerRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-end',
+    marginBottom: 4,
+  },
+  headerBrand: {
+    fontSize: 18,
+    fontFamily: 'Helvetica-Bold',
+    color: BRAND_BLUE,
+  },
+  headerDate: {
+    fontSize: 9,
+    color: '#6b7280',
+  },
+  headerDisclaimer: {
+    fontSize: 8,
+    fontFamily: 'Helvetica-Oblique',
+    color: '#6b7280',
+    marginBottom: 6,
+  },
+  headerRule: {
+    borderBottomWidth: 1,
+    borderBottomColor: '#d1d5db',
+  },
+  footer: {
+    position: 'absolute',
+    bottom: 18,
+    left: 56,
+    right: 56,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    borderTopWidth: 1,
+    borderTopColor: '#d1d5db',
+    paddingTop: 5,
+  },
+  footerText: {
+    fontSize: 8,
+    color: '#9ca3af',
+  },
   title: {
-    fontSize: 26,
+    fontSize: 22,
     fontFamily: 'Helvetica-Bold',
     marginBottom: 12,
-    color: '#111827',
+    color: BRAND_BLUE,
   },
   sectionHeading: {
     fontSize: 14,
     fontFamily: 'Helvetica-Bold',
-    color: '#111827',
+    color: BRAND_BLUE,
     marginBottom: 6,
   },
   divider: {
@@ -78,6 +127,34 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
 });
+
+function PageHeader({ date }: { date: string }) {
+  return (
+    <View fixed style={styles.header}>
+      <View style={styles.headerRow}>
+        <Text style={styles.headerBrand}>Lern-Kurs von Lumio</Text>
+        <Text style={styles.headerDate}>Erstellt am {date}</Text>
+      </View>
+      <Text style={styles.headerDisclaimer}>
+        Hinweis: Dieser Kurs wurde mit Hilfe von Künstlicher Intelligenz (KI) erstellt. Die Inhalte
+        können Fehler enthalten.
+      </Text>
+      <View style={styles.headerRule} />
+    </View>
+  );
+}
+
+function PageFooter() {
+  return (
+    <View fixed style={styles.footer}>
+      <Text style={styles.footerText}>Lern-Kurs von Lumio – Der inklusive Lern-Assistent</Text>
+      <Text
+        style={styles.footerText}
+        render={({ pageNumber, totalPages }) => `Seite ${pageNumber} von ${totalPages}`}
+      />
+    </View>
+  );
+}
 
 function SectionHeading({ heading }: { heading?: string }) {
   if (!heading) return null;
@@ -154,18 +231,21 @@ function ContentSection({ item, isLast }: { item: Content; isLast: boolean }) {
 type WorksheetPDFProps = {
   title: string;
   content: Content[];
+  date: string;
 };
 
 // fallow-ignore-next-line unused-export
-export function WorksheetPDF({ title, content }: WorksheetPDFProps) {
+export function WorksheetPDF({ title, content, date }: WorksheetPDFProps) {
   return (
     <Document>
       <Page size="A4" style={styles.page}>
+        <PageHeader date={date} />
         {title && <Text style={styles.title}>{title}</Text>}
         {title && content.length > 0 && <View style={styles.divider} />}
         {content.map((item, index) => (
           <ContentSection key={item.id} isLast={index === content.length - 1} item={item} />
         ))}
+        <PageFooter />
       </Page>
     </Document>
   );

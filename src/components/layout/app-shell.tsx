@@ -9,6 +9,7 @@ import { useMemo, useState } from 'react';
 import { twMerge } from 'tailwind-merge';
 
 import { useEditorState, useAppActions } from '@state';
+import { createTextContent, createMultipleChoiceContent } from '@state/content-factories';
 import { ChatProvider } from '@components/chat/chat-context';
 import { KeybindsModal } from '@components/keybinds/keybinds-modal';
 import { SettingsModal } from '@components/settings/settings-modal';
@@ -65,6 +66,63 @@ export function AppShell({ children }: AppShellProps) {
                     <PlusIcon className="size-4" />
                     Neues Gespräch
                   </button>
+                  {/* DEV ONLY — comment out this block to remove the mock button */}
+                  {import.meta.env.DEV && (
+                    <button
+                      className="btn btn-warning btn-lg gap-2"
+                      type="button"
+                      onClick={() => {
+                        const items = [
+                          createTextContent(
+                            'Die Photosynthese ist der Prozess, bei dem Pflanzen mithilfe von Sonnenlicht, Wasser und Kohlendioxid Zucker und Sauerstoff herstellen. Sie findet vor allem in den Chloroplasten statt, die den grünen Farbstoff Chlorophyll enthalten.'
+                          ),
+                          createMultipleChoiceContent(
+                            'Was ist das Hauptprodukt der Photosynthese?',
+                            [
+                              { text: 'Sauerstoff und Glukose', correct: true },
+                              { text: 'Kohlendioxid und Wasser', correct: false },
+                              { text: 'Stickstoff und Fett', correct: false },
+                              { text: 'Protein und Kalzium', correct: false },
+                            ]
+                          ),
+                          createTextContent(
+                            'Für die Photosynthese werden drei Dinge benötigt: Licht (meist Sonnenlicht), Wasser (aus dem Boden) und Kohlendioxid (aus der Luft). Die Reaktionsgleichung lautet vereinfacht: 6 CO₂ + 6 H₂O + Lichtenergie → C₆H₁₂O₆ + 6 O₂.'
+                          ),
+                          createMultipleChoiceContent(
+                            'Wo findet die Photosynthese in der Pflanzenzelle statt?',
+                            [
+                              { text: 'Im Chloroplasten', correct: true },
+                              { text: 'Im Zellkern', correct: false },
+                              { text: 'In der Vakuole', correct: false },
+                              { text: 'Im Mitochondrium', correct: false },
+                            ]
+                          ),
+                          createMultipleChoiceContent(
+                            'Welcher Farbstoff ist für die grüne Farbe von Pflanzen verantwortlich?',
+                            [
+                              { text: 'Chlorophyll', correct: true },
+                              { text: 'Melanin', correct: false },
+                              { text: 'Karotin', correct: false },
+                              { text: 'Hämoglobin', correct: false },
+                            ]
+                          ),
+                        ];
+                        const content = Object.fromEntries(items.map((item) => [item.id, item]));
+                        const structure = items.map((item) => item.id);
+                        actions.worksheetStateImported({
+                          apiConfig: editor.apiConfig,
+                          title: 'Photosynthese – Wie Pflanzen Energie gewinnen',
+                          content,
+                          structure,
+                          worksheetLlmRevision: 1,
+                          ui: { loading: {} },
+                        });
+                      }}
+                    >
+                      [DEV] Mock-Arbeitsblatt
+                    </button>
+                  )}
+                  {/* END DEV ONLY */}
                   <label htmlFor="language-mode-select" className="sr-only">
                     Sprachmodus
                   </label>
