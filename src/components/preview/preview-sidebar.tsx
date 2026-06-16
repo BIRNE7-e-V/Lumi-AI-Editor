@@ -45,7 +45,7 @@ const PreviewItem = memo(function PreviewItem({ item }: { item: Content }) {
         <div className="space-y-2">
           {item.answers.map((answer, index) => (
             <label key={`${item.id}-preview-${index}`} className="flex items-center gap-3 text-sm">
-              <input className="checkbox checkbox-sm" disabled type="checkbox" />
+              <input className="checkbox checkbox-sm" type="checkbox" readOnly />
               <span>{answer.text || `Antwort ${index + 1}`}</span>
             </label>
           ))}
