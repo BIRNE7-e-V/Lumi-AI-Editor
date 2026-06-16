@@ -623,10 +623,10 @@ export function ChatPanel({
                 <SparklesIcon className="size-8" />
               </div>
               <div className="space-y-2">
-                <h2 className="text-lg font-semibold">Noch keine Unterhaltung</h2>
+                <h2 className="text-lg font-semibold">Noch kein Gespräch</h2>
                 <p className="text-base-content/70 max-w-md text-sm leading-6">
-                  Frage nach Inhalten, lass dir einen ersten Entwurf erstellen oder arbeite direkt
-                  mit dem aktuellen Arbeitsblatt weiter.
+                  Klicke auf „Arbeitsblatt erstellen" – die KI erstellt dann das Arbeitsblatt mit
+                  dir zusammen.
                 </p>
               </div>
               <button
@@ -636,7 +636,7 @@ export function ChatPanel({
                 onClick={onStartGuidedCreation}
               >
                 <SparklesIcon className="size-5" />
-                Geführte Erstellung starten
+                Arbeitsblatt erstellen
               </button>
             </div>
           ) : (
