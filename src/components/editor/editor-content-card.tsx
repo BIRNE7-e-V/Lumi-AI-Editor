@@ -231,8 +231,10 @@ export const EditorContentCard = memo(function EditorContentCard({
   index,
   total,
   canUseAi,
+  isActive,
   isDropTarget,
   dropPosition,
+  onActivate,
   onAddBelow,
   onAiAddBelow,
   onAiTransform,
@@ -246,8 +248,10 @@ export const EditorContentCard = memo(function EditorContentCard({
   index: number;
   total: number;
   canUseAi: boolean;
+  isActive: boolean;
   isDropTarget: boolean;
   dropPosition: 'before' | 'after';
+  onActivate: () => void;
   onAddBelow: (type: ContentType) => void;
   onAiAddBelow: (type: 'text' | 'multiple-choice') => void;
   onAiTransform: (type: 'text' | 'multiple-choice') => void;
@@ -333,8 +337,10 @@ export const EditorContentCard = memo(function EditorContentCard({
       <article
         className={twMerge(
           'rounded-box border-base-300 bg-base-100 border p-4 shadow-sm transition-colors',
-          isDropTarget && 'bg-base-200/60'
+          isDropTarget && 'bg-base-200/60',
+          isActive && 'border-primary ring-primary ring-4'
         )}
+        onFocus={onActivate}
       >
         <div className="mb-4 flex items-start justify-between gap-3">
           <div className="flex items-center gap-2">
@@ -346,6 +352,9 @@ export const EditorContentCard = memo(function EditorContentCard({
             >
               {contentTypeLabel(item.type)}
             </div>
+            <span className="text-base-content/40 text-xs tabular-nums">
+              {index + 1} / {total}
+            </span>
             <button
               className="btn btn-ghost btn-sm cursor-grab"
               draggable

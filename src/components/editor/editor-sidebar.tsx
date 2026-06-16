@@ -105,6 +105,7 @@ export const EditorSidebar = memo(function EditorSidebar({
   const [feedbackFading, setFeedbackFading] = useState(false);
   const [aiBusy, setAiBusy] = useState<string | null>(null);
   const [h5pLoading, setH5pLoading] = useState(false);
+  const [activeContentId, setActiveContentId] = useState<string | null>(null);
   const [aiDialog, setAiDialog] = useState<AiDialogState>(INITIAL_AI_DIALOG);
 
   useEffect(() => {
@@ -132,13 +133,15 @@ export const EditorSidebar = memo(function EditorSidebar({
       targetContentId: string | null
     ) => {
       if (mode === 'create') {
-        actions.worksheetContentAdded({ content: result, index: 0 });
+        actions.worksheetContentAdded({ content: result, index: orderedContent.length });
+        setActiveContentId(result.id);
         return;
       }
 
       if (mode === 'addBelow' && targetContentId) {
         const targetIndex = orderedContent.findIndex((entry) => entry.id === targetContentId);
         actions.worksheetContentAdded({ content: result, index: targetIndex + 1 });
+        setActiveContentId(result.id);
         return;
       }
 
@@ -148,6 +151,7 @@ export const EditorSidebar = memo(function EditorSidebar({
             entry.id === targetContentId ? { ...result, id: targetContentId } : entry
           )
         );
+        setActiveContentId(targetContentId);
       }
     },
     [actions, orderedContent]
@@ -377,7 +381,9 @@ export const EditorSidebar = memo(function EditorSidebar({
                 className="btn btn-outline btn-lg h-auto min-h-0 gap-1.5 px-3 py-2 text-xs leading-tight whitespace-normal"
                 type="button"
                 onClick={() => {
-                  actions.worksheetContentAdded({ content: createContent(option.type), index: 0 });
+                  const content = createContent(option.type);
+                  actions.worksheetContentAdded({ content, index: orderedContent.length });
+                  setActiveContentId(content.id);
                 }}
               >
                 <option.icon className="size-4" />
@@ -421,14 +427,15 @@ export const EditorSidebar = memo(function EditorSidebar({
                   canUseAi={canUseAi && aiBusy === null}
                   dropPosition={dropPosition}
                   index={index}
+                  isActive={activeContentId === item.id}
                   isDropTarget={dropTargetId === item.id}
                   item={item}
                   total={orderedContent.length}
+                  onActivate={() => setActiveContentId(item.id)}
                   onAddBelow={(type) => {
-                    actions.worksheetContentAdded({
-                      content: createContent(type),
-                      index: index + 1,
-                    });
+                    const content = createContent(type);
+                    actions.worksheetContentAdded({ content, index: index + 1 });
+                    setActiveContentId(content.id);
                   }}
                   onAiAddBelow={(type) => {
                     openAiDialog(type, 'addBelow', item.id);
