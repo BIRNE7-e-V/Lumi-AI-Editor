@@ -97,7 +97,7 @@ Multiple-Choice-Antworten MÜSSEN eindeutig sein:
 </multiple_choice_quality>
 
 Was in das WORKSHEET_UPDATE gehört:
-- "title": der Titel des Arbeitsblatts (Thema)
+- "title": der Titel des Arbeitsblatts – immer in korrekter Rechtschreibung, auch wenn die Nutzereingabe Tippfehler enthält
 - "content": nur fertige Lerninhalte – erklärende Texte (type "text") und Multiple-Choice-Fragen (type "multiple-choice")
 
 Was NICHT in das WORKSHEET_UPDATE gehört:
