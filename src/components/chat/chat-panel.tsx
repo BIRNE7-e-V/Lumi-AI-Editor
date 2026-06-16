@@ -655,8 +655,9 @@ export function ChatPanel({
                       'rounded-box max-w-[85%] min-w-[30%] px-4 py-3 text-sm leading-6 shadow-sm',
                       isAssistant
                         ? 'border-base-300 bg-base-100 text-base-content border'
-                        : 'bg-primary text-primary-content'
+                        : ''
                     )}
+                    style={isAssistant ? undefined : { backgroundColor: '#d5cefd', color: '#000000' }}
                   >
                     {text || (!isAssistant && message.content) ? (
                       <p className="wrap-break-word whitespace-pre-wrap">

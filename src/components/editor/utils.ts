@@ -29,13 +29,17 @@ export function hasMeaningfulContent(title: string, content: Content[]) {
 }
 
 export function parseMessage(content: string): { text: string; suggestions: string[] } {
-  const match = content.match(/\[VORSCHLÄGE:\s*(.+?)\]/s);
+  // Strip [WORKSHEET_UPDATE:...] block — system prompt puts it at the end of every reply.
+  const updateIdx = content.indexOf('[WORKSHEET_UPDATE:');
+  const cleaned = updateIdx === -1 ? content : content.slice(0, updateIdx).trim();
+
+  const match = cleaned.match(/\[VORSCHLÄGE:\s*(.+?)\]/s);
   if (!match) {
-    return { text: content.trim(), suggestions: [] };
+    return { text: cleaned.trim(), suggestions: [] };
   }
 
   return {
-    text: content.replace(match[0], '').trim(),
+    text: cleaned.replace(match[0], '').trim(),
     suggestions: match[1]
       .split('|')
       .map((item) => item.trim())
