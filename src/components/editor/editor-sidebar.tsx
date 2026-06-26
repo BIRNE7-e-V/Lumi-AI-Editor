@@ -474,7 +474,7 @@ export const EditorSidebar = memo(function EditorSidebar({
           </div>
         ) : null}
         <button
-          className="btn btn-outline btn-lg w-full gap-2"
+          className="btn btn-secondary btn-lg w-full gap-2"
           disabled={orderedContent.length === 0 || aiBusy !== null || h5pLoading}
           type="button"
           onClick={() => {
